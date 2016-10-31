@@ -17,19 +17,11 @@
  */
 
 /**
- * @file main.c
+ * @file servos.c
  * @author Mirco E. Gysin
- * @date 20 Oct 2016
- * @brief This is the main file of the Temporary Graffity project 
+ * @date 31 Oct 2016
+ * @brief This file provides the functions for the configuration
+				 and the control of the two servos
  */
-  
-#include "stm32f10x.h"
 
- 
- /**  
- * @brief main function
- */
-int main(void) {
-	
-}
- 
+#include "servos.h"

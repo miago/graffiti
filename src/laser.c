@@ -17,19 +17,11 @@
  */
 
 /**
- * @file main.c
+ * @file laser.c
  * @author Mirco E. Gysin
- * @date 20 Oct 2016
- * @brief This is the main file of the Temporary Graffity project 
+ * @date 31 Oct 2016
+ * @brief This file controls the laser beam. 
  */
-  
-#include "stm32f10x.h"
 
- 
- /**  
- * @brief main function
- */
-int main(void) {
-	
-}
- 
+
+#include "laser.h"
