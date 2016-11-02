@@ -43,9 +43,13 @@ CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
 
 TARGET_BASE1=laser
+TARGET_STM=stmtest
 
 
 TARGET1 = $(TARGET_BASE1)$(TARGET_EXTENSION)
+STM_TEST_TARGET = $(TARGET_STM)$(TARGET_EXTENSION)
+
+STM_LIB_FILES = $(UNITY_ROOT)/unity_src/unity.c test/stmtest.c test/test_stmtestlib.c test/test_runners/test_stmtestlib_runner.c
 SRC_FILES1=$(UNITY_ROOT)/unity_src/unity.c ../src/laser.c -L./ -lstmtest test/test_laser.c test/test_runners/test_laser_runner.c
 
 INC_DIRS=-I../src -I$(UNITY_ROOT)/unity_src -I../inc -I./inc
@@ -53,15 +57,20 @@ SYMBOLS=-DTEST
 
 all: clean default
 
-default:
-	export LD_LIBRARY_PATH=$(UNITY_ROOT):$LD_LIBRARY_PATH
+default: stmlib
+	#export LD_LIBRARY_PATH=$(UNITY_ROOT):$LD_LIBRARY_PATH
 	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_laser.c test/test_runners/test_laser_runner.c
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -o $(TARGET1)
 	./$(TARGET1)
 
-lib:
+stmlib:
 	$(C_COMPILER) -Wall -Wundef -I./inc $(SYMBOLS) test/stmtest.c -c -o libstmtest.o
 	ar rcs libstmtest.a libstmtest.o
+	
+stmlibtest: stmlib
+	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_stmtestlib.c test/test_runners/test_stmtestlib_runner.c
+	$(C_COMPILER) -I./inc -I$(UNITY_ROOT)/unity_src $(SYMBOLS) -L./ -lstmtest $(STM_LIB_FILES) -o $(STM_TEST_TARGET)
+	./$(STM_TEST_TARGET)
 	
 clean:
 	$(CLEANUP)

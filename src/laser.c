@@ -33,8 +33,16 @@ enum laser_status_t laser_status = undefined;
 void laser_init(void){
 	laser_set_off();
 	/* enable clock of the desired port */
-	
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	
+	/* set gpio as output */
+	GPIO_InitTypeDef GPIO_InitStructure;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);	
+	
+	laser_set_off();
 }
 
 void laser_set_on(void){
@@ -42,6 +50,17 @@ void laser_set_on(void){
 }
 
 void laser_set_off(void){
+	GPIO_WriteBit(GPIOA, GPIO_Pin_6, Bit_SET);
 	laser_status = off;
+}	
+
+enum laser_status_t get_laser_status(void){
+	uint8_t laser_statut_u8;
+	laser_statut_u8 = GPIO_ReadOutputDataBit(GPIOA, GPIO_Pin_6);
+	if(laser_statut_u8 == 0x00) {
+		return off;
+	} else {
+		return on;
+	}
 }
 

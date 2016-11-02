@@ -8,6 +8,7 @@
  * for example: If you plan to pass by reference, this could be useful
  * however, it should often be avoided */
 extern enum laser_status_t laser_status; 
+extern 
 
 void setUp(void)
 {

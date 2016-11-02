@@ -22,13 +22,13 @@
 #include "unity.h"
 #include <setjmp.h>
 #include <stdio.h>
-#include "laser.h"
+#include "stm32f10x.h"
 #include <stdint.h>
 
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void test_laser_init(void);
+extern void test_GPIO_WriteBit(void);
 
 
 /*=======Test Reset Option=====*/
@@ -43,8 +43,8 @@ void resetTest(void)
 /*=======MAIN=====*/
 int main(void)
 {
-  UnityBegin("test/test_laser.c");
-  RUN_TEST(test_laser_init, 22);
+  UnityBegin("test/test_stmtestlib.c");
+  RUN_TEST(test_GPIO_WriteBit, 20);
 
   return (UnityEnd());
 }
