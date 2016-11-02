@@ -25,3 +25,23 @@
 
 
 #include "laser.h"
+#include <stdint.h>
+#include "stm32f10x.h"
+
+enum laser_status_t laser_status = undefined;
+
+void laser_init(void){
+	laser_set_off();
+	/* enable clock of the desired port */
+	
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+}
+
+void laser_set_on(void){
+	laser_status = on;
+}
+
+void laser_set_off(void){
+	laser_status = off;
+}
+
