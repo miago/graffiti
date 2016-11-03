@@ -24,8 +24,8 @@ void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal){
 }
 
 uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
-	uint16_t port_value;
-	uint16_t ret_value;
+	uint16_t port_value = 0;;
+	uint16_t ret_value = 0;
 	
 	if(GPIOx == GPIOA){
 		port_value = GPIOA_value;

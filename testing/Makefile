@@ -9,6 +9,7 @@ ifeq ($(OSTYPE),cygwin)
 	CLEANUP = rm -f
 	MKDIR = mkdir -p
 	TARGET_EXTENSION=.out
+	LIB_EXTENSION=.a
 elseifeq ($(OSTYPE),msys)
     CLEANUP = rm -f
 	MKDIR = mkdir -p
@@ -21,6 +22,7 @@ else
 	CLEANUP = rm -f
 	MKDIR = mkdir -p
 	TARGET_EXTENSION=.out
+	LIB_EXTENSION=.a
 endif
 
 UNITY_ROOT=./
@@ -42,36 +44,54 @@ CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
 
-TARGET_BASE1=laser
+LASER_BASE=laser
 TARGET_STM=stmtest
+STM_LIB_BASE=stm
 
-
-TARGET1 = $(TARGET_BASE1)$(TARGET_EXTENSION)
+LASER = $(LASER_BASE)$(TARGET_EXTENSION)
 STM_TEST_TARGET = $(TARGET_STM)$(TARGET_EXTENSION)
+STM_LIB = lib$(STM_LIB_BASE)$(LIB_EXTENSION)
 
-STM_LIB_FILES = $(UNITY_ROOT)/unity_src/unity.c test/stmtest.c test/test_stmtestlib.c test/test_runners/test_stmtestlib_runner.c
-SRC_FILES1=$(UNITY_ROOT)/unity_src/unity.c ../src/laser.c -L./ -lstmtest test/test_laser.c test/test_runners/test_laser_runner.c
+STM_LIB_SRC = test/libstm.c
+STM_LIB_TEST_SRC = $(UNITY_ROOT)/unity_src/unity.c test/test_libstm.c test/test_runners/test_libstm_runner.c
+LASER_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/laser.c -L./ -l$(STM_LIB_BASE) test/test_laser.c test/test_runners/test_laser_runner.c
 
 INC_DIRS=-I../src -I$(UNITY_ROOT)/unity_src -I../inc -I./inc
 SYMBOLS=-DTEST
 
 all: clean default
 
-default: stmlib
-	#export LD_LIBRARY_PATH=$(UNITY_ROOT):$LD_LIBRARY_PATH
+# require that the stmlib is built
+default: libstm
+	# generate test runner
 	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_laser.c test/test_runners/test_laser_runner.c
-	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(SRC_FILES1) -o $(TARGET1)
-	./$(TARGET1)
+	# compile
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(LASER_TEST_SRC) -o $(LASER)
+	# execute
+	./$(LASER)
 
-stmlib:
-	$(C_COMPILER) -Wall -Wundef -I./inc $(SYMBOLS) test/stmtest.c -c -o libstmtest.o
-	ar rcs libstmtest.a libstmtest.o
+libstm:
+	# compile stmtest with -c flag: needed because we don't have a main function
+	# since it's gonna be a library
+	$(C_COMPILER) -Wall -Wundef -I./inc $(SYMBOLS) $(STM_LIB_SRC) -c -o lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
+	# generate library (.a file) from object file
+	ar rcs $(STM_LIB) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
+	$(CLEANUP) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
 	
-stmlibtest: stmlib
-	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_stmtestlib.c test/test_runners/test_stmtestlib_runner.c
-	$(C_COMPILER) -I./inc -I$(UNITY_ROOT)/unity_src $(SYMBOLS) -L./ -lstmtest $(STM_LIB_FILES) -o $(STM_TEST_TARGET)
+# to test the stmlib we need a compiled stm
+libstmtest: libstm
+	# generate test runner
+	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_libstm.c test/test_runners/test_libstm_runner.c
+	# compile library, don't know why it does not work when linking the library.
+	$(C_COMPILER) -Wall -Wundef -I./inc $(SYMBOLS) $(STM_LIB_SRC) -c -o lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
+	# compile test
+	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(STM_LIB_TEST_SRC) lib$(STM_LIB_BASE)$(TARGET_EXTENSION) -o $(STM_TEST_TARGET)
+	# execute
 	./$(STM_TEST_TARGET)
-	
-clean:
-	$(CLEANUP)
 
+clean:
+	$(CLEANUP) $(LASER)	
+	$(CLEANUP) $(STM_LIB)
+	$(CLEANUP) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
+	$(CLEANUP) test/test_runners/test_libstm_runner.c
+	$(CLEANUP) test/test_runners/test_laser_runner.c
