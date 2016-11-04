@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\inc</IncludePath>
+              <IncludePath>.\inc\hal;.\inc\app</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -384,15 +384,35 @@
               <FileType>1</FileType>
               <FilePath>.\src\main.c</FilePath>
             </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app</GroupName>
+          <Files>
             <File>
-              <FileName>laser.c</FileName>
+              <FileName>laser_app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\laser.c</FilePath>
+              <FilePath>.\src\app\laser_app.c</FilePath>
             </File>
             <File>
-              <FileName>servos.c</FileName>
+              <FileName>servos_app.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\servos.c</FilePath>
+              <FilePath>.\src\app\servos_app.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>hal</GroupName>
+          <Files>
+            <File>
+              <FileName>laser_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\laser_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>servo_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\servo_hal.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -427,7 +447,25 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="GPIO" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
       <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="RCC" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="SPI" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
+        <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Device" Cgroup="StdPeriph Drivers" Csub="TIM" Cvendor="Keil" Cversion="3.5.0" condition="STM32F1xx STDPERIPH RCC">
         <package name="STM32F1xx_DFP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="2.1.0"/>
         <targetInfos>
           <targetInfo name="Target 1"/>

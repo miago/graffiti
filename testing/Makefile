@@ -93,6 +93,5 @@ clean:
 	$(CLEANUP) $(LASER)	
 	$(CLEANUP) $(STM_LIB)
 	$(CLEANUP) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
-	$(CLEANUP) $(STM_TEST_TARGET)
 	$(CLEANUP) test/test_runners/test_libstm_runner.c
 	$(CLEANUP) test/test_runners/test_laser_runner.c

@@ -28,6 +28,7 @@
 
 
 void laser_init_hal(void){
+	GPIO_InitTypeDef GPIO_InitStructure;
 	/* set clock related stuff */
 	
 	/* TODO check which port it is! */
@@ -41,7 +42,6 @@ void laser_init_hal(void){
 	}
 	
 	/* set gpio as output */
-	GPIO_InitTypeDef GPIO_InitStructure;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin = LASER_GPIO_PIN;

@@ -24,4 +24,5 @@
 				 and the control of the two servos
  */
 
-#include "servos.h"
+#include "servos_hal.h"
+#include "servos_app.h"
