@@ -54,9 +54,9 @@ STM_LIB = lib$(STM_LIB_BASE)$(LIB_EXTENSION)
 
 STM_LIB_SRC = test/libstm.c
 STM_LIB_TEST_SRC = $(UNITY_ROOT)/unity_src/unity.c test/test_libstm.c test/test_runners/test_libstm_runner.c
-LASER_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/laser.c -L./ -l$(STM_LIB_BASE) test/test_laser.c test/test_runners/test_laser_runner.c
+LASER_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/laser_app.c ../src/hal/laser_hal.c -L./ -l$(STM_LIB_BASE) test/test_laser.c test/test_runners/test_laser_runner.c
 
-INC_DIRS=-I../src -I$(UNITY_ROOT)/unity_src -I../inc -I./inc
+INC_DIRS=-I../inc/app  -I../inc/hal -I$(UNITY_ROOT)/unity_src -I./inc
 SYMBOLS=-DTEST
 
 all: clean default
@@ -93,5 +93,6 @@ clean:
 	$(CLEANUP) $(LASER)	
 	$(CLEANUP) $(STM_LIB)
 	$(CLEANUP) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
+	$(CLEANUP) $(STM_TEST_TARGET)
 	$(CLEANUP) test/test_runners/test_libstm_runner.c
 	$(CLEANUP) test/test_runners/test_laser_runner.c

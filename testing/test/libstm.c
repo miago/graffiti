@@ -24,8 +24,8 @@ void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal){
 }
 
 uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
-	uint16_t port_value = 0;;
-	uint16_t ret_value = 0;
+	uint16_t port_value = 0;
+	uint8_t ret_value = 0;
 	
 	if(GPIOx == GPIOA){
 		port_value = GPIOA_value;
@@ -36,9 +36,13 @@ uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
 		printf("!!!WARNING, YOU ARE USING AN UNIMPLEMENTED FEATURE!!!\n\r");
 	}
 	
-	ret_value = (port_value & GPIO_Pin) >> GPIO_Pin;
+	if((port_value&GPIO_Pin) == 0x0000){
+		ret_value = 0x00;
+	} else {
+		ret_value = 0x01;
+	}
 	
-	return (uint8_t)ret_value;
+	return ret_value;
 }
 
 uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx) {
