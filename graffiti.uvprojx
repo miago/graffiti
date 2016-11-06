@@ -399,6 +399,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\app\servos_app.c</FilePath>
             </File>
+            <File>
+              <FileName>clock_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\clock_app.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -410,9 +415,14 @@
               <FilePath>.\src\hal\laser_hal.c</FilePath>
             </File>
             <File>
-              <FileName>servo_hal.c</FileName>
+              <FileName>servos_hal.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\src\hal\servo_hal.c</FilePath>
+              <FilePath>.\src\hal\servos_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>clock_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\clock_hal.c</FilePath>
             </File>
           </Files>
         </Group>

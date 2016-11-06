@@ -17,22 +17,18 @@
  */
 
 /**
- * @file main.c
+ * @file clock_hal.h
  * @author Mirco E. Gysin
- * @date 20 Oct 2016
- * @brief This is the main file of the Temporary Graffity project 
+ * @date 05 Nov 2016
  */
-  
-#include "stm32f10x.h"
-#include "clock_app.h"
-
-extern volatile uint32_t ms_ticks;
-
  
- /**  
- * @brief main function
- */
-int main(void){
-	clock_init();
-}
+#ifndef CLOCK_HAL_H
+#define CLOCK_HAL_H
 
+void TimingDelay_Decrement(void);
+
+/*void SysTick_Handler(void);*/
+
+void clock_init_hal(void);
+
+#endif

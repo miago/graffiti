@@ -17,22 +17,15 @@
  */
 
 /**
- * @file main.c
+ * @file servos_hal.c
  * @author Mirco E. Gysin
- * @date 20 Oct 2016
- * @brief This is the main file of the Temporary Graffity project 
+ * @date 05 Nov 2016
+ * @brief This file controls the laser beam at Hardware Level. 
  */
-  
+
 #include "stm32f10x.h"
-#include "clock_app.h"
+#include "servos_hal.h"
 
-extern volatile uint32_t ms_ticks;
-
- 
- /**  
- * @brief main function
- */
-int main(void){
-	clock_init();
+void servos_init_hal(void){
+	
 }
-
