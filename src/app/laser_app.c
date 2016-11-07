@@ -47,4 +47,3 @@ void laser_set_off(void){
 enum laser_status_t laser_get_status(void){
 	return laser_get_status_hal();
 }
-

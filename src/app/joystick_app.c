@@ -17,28 +17,26 @@
  */
 
 /**
- * @file main.c
+ * @file joystick_app.c
  * @author Mirco E. Gysin
- * @date 20 Oct 2016
- * @brief This is the main file of the Temporary Graffity project 
+ * @date 07 Nov 2016
+ * @brief Manages the Joystick
  */
-  
-#include "stm32f10x.h"
-#include "clock_app.h"
-#include "servos_app.h"
 
-extern volatile uint32_t ms_ticks;
+#include "joystick_hal.h"
+#include "joystick_app.h"
+#include <stdint.h>
 
- 
- /**  
- * @brief main function
- */
-int main(void){
-	clock_init();
-    servos_init();
-    
-    while(1);
-    
-    
+
+uint8_t joystick_state = 0x00;
+uint8_t joystick_rising = 0x00;
+uint8_t joystick_falling = 0x00;
+
+void joystick_init(void){
+	joystick_rising = 0x00;
+	joystick_falling = 0x00;
 }
 
+void joystick_update(void){
+	joystick_update_hal();
+}

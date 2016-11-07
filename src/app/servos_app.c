@@ -31,11 +31,16 @@
 float servos_tilt_angle;
 float servos_pan_angle;
 float servos_distance_to_wall;
+uint16_t servos_timer_period;
 
 void servos_init(void) {
 	servos_pan_angle = SERVOS_INITIAL_PAN_ANGLE;
 	servos_tilt_angle = SERVOS_INITIAL_TILT_ANGLE;
 	servos_distance_to_wall = SERVOS_DISTANCE_TO_WALL;
+
+	servos_timer_period = servos_get_timer_period_hal(); 
+	
+    servos_init_hal();
 }
 
 float servos_get_pan_angle(void){
@@ -65,4 +70,15 @@ Angles servos_point_to_angles(Point* p) {
 	ang.pan = atan2(p->x, servos_distance_to_wall);
 	
 	return ang;
+}
+
+uint16_t servos_angle_to_timervalue(float angle){
+	/* angle is between 0 and pi, we have to
+		bring it between 1 ms and 2ms
+		Fullscale 1ms
+	*/
+
+	float value_1ms = ((float)servos_timer_period) / 20.0;
+	
+	return 750;
 }

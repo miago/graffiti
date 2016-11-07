@@ -404,6 +404,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\app\clock_app.c</FilePath>
             </File>
+            <File>
+              <FileName>joystick_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\joystick_app.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -423,6 +428,11 @@
               <FileName>clock_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hal\clock_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>joystick_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\joystick_hal.c</FilePath>
             </File>
           </Files>
         </Group>

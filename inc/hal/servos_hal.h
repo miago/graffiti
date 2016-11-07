@@ -27,6 +27,8 @@
 
 #include "stm32f10x.h"
 
+#define TIMER_PERIOD (10000)
+
 typedef struct {
 	float x, y;
 } Point;
@@ -37,5 +39,6 @@ typedef struct {
 
 void servos_init_hal(void);
 void servos_set_angles_hal(Angles * new_angles);
+uint16_t servos_get_timer_period_hal(void);
 
 #endif

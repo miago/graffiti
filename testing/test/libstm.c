@@ -7,6 +7,14 @@ uint16_t GPIOB_value = 0x0000;
 void RCC_APB2PeriphClockCmd(uint32_t RCC_APB2Periph, FunctionalState NewState){
 }
 
+void RCC_APB1PeriphClockCmd(uint32_t RCC_APB1Periph, FunctionalState NewState){
+	
+}
+
+void GPIO_PinRemapConfig(uint32_t GPIO_Remap, FunctionalState NewState){
+	
+}
+
 void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct){
 }
 
@@ -56,4 +64,16 @@ uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx) {
 	}
 	
 	return 0xFFFF;
+}
+
+void TIM_Cmd(TIM_TypeDef* TIMx, FunctionalState NewState){
+	
+}
+
+void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseInitStruct){
+	
+}
+
+void TIM_OC3Init(TIM_TypeDef* TIMx, TIM_OCInitTypeDef* TIM_OCInitStruct){
+	
 }
