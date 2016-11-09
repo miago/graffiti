@@ -52,13 +52,30 @@ float servos_get_tilt_angle(void){
 }
 
 void servos_set_pan_angle(float new_pan_angle){
+    uint16_t tim_value = 0;
 	servos_pan_angle = new_pan_angle;
+    tim_value = servos_angle_to_timervalue(new_pan_angle);
+    servos_set_pan_angle_hal(tim_value);
 }
 
 void servos_set_tilt_angle(float new_tilt_angle){
+    uint16_t tim_value = 0;
 	servos_tilt_angle = new_tilt_angle;
+    tim_value = servos_angle_to_timervalue(new_tilt_angle);
+    servos_set_tilt_angle_hal(tim_value);
 }
 
+
+void servos_set_position(float x, float y){
+    Angles ang;
+    Point p;
+    p.x = x;
+    p.y = y;
+    ang = servos_point_to_angles(&p);
+    
+    servos_set_tilt_angle(ang.tilt);
+    servos_set_pan_angle(ang.pan);
+}
 /*	
 	
 */

@@ -50,34 +50,28 @@ void servos_init_hal(void){
     TIM_OC_InitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
     TIM_OC_InitStructure.TIM_Pulse = 750; 
     TIM_OC3Init(TIM3, &TIM_OC_InitStructure);
-    
-    /* Set gpio + surrounding gpios to output to supply the servo
-        PC6 to 3.3V
-        PC5 to GND
-        PC8 is PWM signal out
-    */
-    
-    /* PC6 to 1*/
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
-    
-    GPIO_WriteBit(GPIOC, GPIO_Pin_6, Bit_SET);
 
-    /* PC5 to 0*/
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
-    
-    GPIO_WriteBit(GPIOC, GPIO_Pin_5, Bit_RESET);
-    
+    /* Timer Output Compare Mode PWM */
+    TIM_OC_InitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OC_InitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    TIM_OC_InitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+    TIM_OC_InitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OC_InitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+    TIM_OC_InitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OC_InitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
+    TIM_OC_InitStructure.TIM_Pulse = 750; 
+    TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
+  
     
     GPIO_PinRemapConfig(GPIO_FullRemap_TIM3, ENABLE);
     /* PC8 signal out */
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOC, &GPIO_InitStructure);
+    /* PC9 signal out */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
     
@@ -86,4 +80,30 @@ void servos_init_hal(void){
 
 uint16_t servos_get_timer_period_hal(void){
 	return TIMER_PERIOD;
+}
+
+void servos_set_pan_angle_hal(uint16_t period){
+    TIM_OCInitTypeDef TIM_OC_InitStructure;
+    TIM_OC_InitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OC_InitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    TIM_OC_InitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+    TIM_OC_InitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OC_InitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+    TIM_OC_InitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OC_InitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
+    TIM_OC_InitStructure.TIM_Pulse = period; 
+    TIM_OC3Init(TIM3, &TIM_OC_InitStructure);
+}
+
+void servos_set_tilt_angle_hal(uint16_t period){
+    TIM_OCInitTypeDef TIM_OC_InitStructure;
+    TIM_OC_InitStructure.TIM_OCMode = TIM_OCMode_PWM1;
+    TIM_OC_InitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
+    TIM_OC_InitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
+    TIM_OC_InitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
+    TIM_OC_InitStructure.TIM_OCNPolarity = TIM_OCNPolarity_High;
+    TIM_OC_InitStructure.TIM_OutputState = TIM_OutputState_Enable;
+    TIM_OC_InitStructure.TIM_OutputNState = TIM_OutputNState_Disable;
+    TIM_OC_InitStructure.TIM_Pulse = period; 
+    TIM_OC4Init(TIM3, &TIM_OC_InitStructure);
 }

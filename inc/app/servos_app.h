@@ -10,7 +10,7 @@
 
 void servos_init(void);
 void servos_set_angles(float tilt_angle, float pan_angle);
-void servos_set_position(void);
+void servos_set_position(float x, float y);
 float servos_get_pan_angle(void);
 float servos_get_tilt_angle(void);
 void servos_set_pan_angle(float new_pan_angle);

@@ -26,6 +26,7 @@
 #include "stm32f10x.h"
 #include "clock_app.h"
 #include "servos_app.h"
+#include "servos_hal.h"
 
 extern volatile uint32_t ms_ticks;
 
@@ -34,8 +35,17 @@ extern volatile uint32_t ms_ticks;
  * @brief main function
  */
 int main(void){
+    int a = 0;
 	clock_init();
     servos_init();
+
+    
+
+        //servos_set_pan_angle(((float)a)/1000.0);
+        servos_set_position(-1, -1);
+        delay_ms(30);
+        servos_set_position(1, 1);
+ 
     
     while(1);
     
