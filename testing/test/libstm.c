@@ -3,6 +3,7 @@
 
 uint16_t GPIOA_value = 0x0000;
 uint16_t GPIOB_value = 0x0000;
+uint16_t GPIOC_value = 0x0000;
 
 void RCC_APB2PeriphClockCmd(uint32_t RCC_APB2Periph, FunctionalState NewState){
 }
@@ -19,15 +20,21 @@ void GPIO_Init(GPIO_TypeDef* GPIOx, GPIO_InitTypeDef* GPIO_InitStruct){
 }
 
 void GPIO_WriteBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, BitAction BitVal){
-	if(GPIOx == GPIOA) 
-	{
-		if(BitVal == Bit_SET) {
-			GPIOA_value |= GPIO_Pin;
-		} else {
-			GPIOA_value &= ~GPIO_Pin;
-		}
+	uint16_t * gpio_value;
+	if(GPIOx == GPIOA){
+		gpio_value = &GPIOA_value;
+	} else if(GPIOx == GPIOB){
+		gpio_value = &GPIOB_value;
+	} else if(GPIOx == GPIOC){
+		gpio_value = &GPIOC_value;
 	} else {
 		printf("!!!WARNING, YOU ARE USING AN UNIMPLEMENTED FEATURE!!!\n\r");
+	}
+	
+	if(BitVal == Bit_SET) {
+		*gpio_value |= GPIO_Pin;
+	} else {
+		*gpio_value &= ~GPIO_Pin;
 	}
 }
 
@@ -40,7 +47,11 @@ uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
 	} 
 	else if(GPIOx == GPIOB) {
 		port_value = GPIOB_value;
-	} else {
+	} 
+	else if(GPIOx == GPIOC) {
+		port_value = GPIOC_value;
+	}
+	else {
 		printf("!!!WARNING, YOU ARE USING AN UNIMPLEMENTED FEATURE!!!\n\r");
 	}
 	
@@ -53,13 +64,17 @@ uint8_t GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
 	return ret_value;
 }
 
-uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx) {
+uint16_t GPIO_ReadOutputData(GPIO_TypeDef* GPIOx){
 	if(GPIOx == GPIOA){
 		return GPIOA_value;
 	} 
-	else if(GPIOx == GPIOB) {
+	else if(GPIOx == GPIOB){
 		return GPIOB_value;
-	} else {
+	}
+	else if(GPIOx == GPIOC){
+		return GPIOC_value; 
+	}
+	else {
 		printf("!!!WARNING, YOU ARE USING AN UNIMPLEMENTED FEATURE!!!\n\r");
 	}
 	

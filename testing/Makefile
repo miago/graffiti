@@ -52,7 +52,7 @@ STM_LIB_BASE=stm
 
 LASER = $(LASER_BASE)$(TARGET_EXTENSION)
 SERVOS = $(SERVOS_BASE)$(TARGET_EXTENSION)
-JOYSTICK = $(JOYSTIC_BASE)$(TARGET_EXTENSION)
+JOYSTICK = $(JOYSTICK_BASE)$(TARGET_EXTENSION)
 STM_TEST_TARGET = $(TARGET_STM)$(TARGET_EXTENSION)
 STM_LIB = lib$(STM_LIB_BASE)$(LIB_EXTENSION)
 
@@ -118,8 +118,12 @@ libstmtest: libstm
 clean:
 	$(CLEANUP) $(LASER)	
 	$(CLEANUP) $(SERVOS)
+	$(CLEANUP) $(JOYSTICK)
 	$(CLEANUP) $(STM_LIB)
 	$(CLEANUP) $(STM_TEST_TARGET)
 	$(CLEANUP) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
 	$(CLEANUP) test/test_runners/test_libstm_runner.c
+	$(CLEANUP) test/test_runners/test_stmtestlib_runner.c
 	$(CLEANUP) test/test_runners/test_laser_runner.c
+	$(CLEANUP) test/test_runners/test_joystick_runner.c
+	$(CLEANUP) test/test_runners/test_servos_runner.c

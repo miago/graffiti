@@ -16,5 +16,6 @@ float servos_get_tilt_angle(void);
 void servos_set_pan_angle(float new_pan_angle);
 void servos_set_tilt_angle(float new_tilt_angle);
 Angles servos_point_to_angles(Point* p) ;
+uint16_t servos_angle_to_timervalue(float angle);
 
 #endif

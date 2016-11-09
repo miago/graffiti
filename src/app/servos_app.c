@@ -78,7 +78,16 @@ uint16_t servos_angle_to_timervalue(float angle){
 		Fullscale 1ms
 	*/
 
-	float value_1ms = ((float)servos_timer_period) / 20.0;
+	float value_1ms;
+	float timer_value_float;
+	uint16_t timer_value_uint16_t;
+
+	value_1ms = ((float)servos_timer_period) / 20.0;
+	timer_value_float = value_1ms * angle / (3.141592653589793);
+	timer_value_float += value_1ms;
+	timer_value_uint16_t = (uint16_t)timer_value_float;
+
+
 	
-	return 750;
+	return timer_value_float;
 }
