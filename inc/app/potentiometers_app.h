@@ -1,0 +1,7 @@
+
+#ifndef POTENTIOMETERS_HAL_H
+#define POTENTIOMETERS_HAL_H
+
+
+
+#endif
