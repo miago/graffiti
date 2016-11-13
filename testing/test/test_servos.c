@@ -66,72 +66,83 @@ void test_servos_set_servos_tilt_angle(void){
 	TEST_ASSERT_FLOAT_WITHIN(0.001, 0.9525, servos_tilt_angle);
 }
 
+
+/*
+
+	New routine, without distance.	
+	the canvas has a width of 2 and a heigth of 1.
+
+	Point 0,0 is in the middle of the canvas
+
+
+
+	
+
+	Points -1 respectively +1 in the x axis are at an angle of 45 degrees
+	Point -0.5 of the y coordinate is at an angle of 0 degree (or maybe 
+	180, depending on where the angle of the servo starts).
+
+*/
 void test_servos_point_to_angles(void){
 	Point p;
 	Angles angles;
-	servos_distance_to_wall = 1;
 	
-	/* 
-		trivial case at point 0,0
-	*/
 	p.x = 0;
 	p.y = 0;
+	
 	angles = servos_point_to_angles(&p);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, angles.tilt);
+	
 	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, angles.pan);
+
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 0.4636, angles.tilt);
 	
-	/* 
-		case at angle 45 degrees upwards (pi/4)
-	*/
-	p.x = 0;
-	p.y = 1;
-	angles = servos_point_to_angles(&p);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, angles.pan);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 0.78539816339, angles.tilt);
-	
-	/*
-		case at angle 45 degree downwards 
-	*/
-	p.x = 0;
-	p.y = -1;
-	angles = servos_point_to_angles(&p);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, angles.pan);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, -0.78539816339, angles.tilt);
-	
-	/*
-		case at -0.5, -0.5 
-	*/
-	
-	p.x = -0.5;
+	p.x = -1;
 	p.y = -0.5;
+	
 	angles = servos_point_to_angles(&p);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, -0.463648, angles.pan);
-	TEST_ASSERT_FLOAT_WITHIN(0.001, -0.463648, angles.tilt);
+	
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -3.141592653589/4, angles.pan);
+	
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, angles.tilt);
+	
+	p.x = 1;
+	p.y = 0.5;
+	
+	angles = servos_point_to_angles(&p);
+	
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 3.141592653589/4, angles.pan);
+	
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 3.141592653589/4, angles.tilt);
+	
 }
 
-void test_servos_angle_to_timervalue(void) {
+void test_servos_pan_angle_to_timervalue(void) {
 	servos_timer_period = 10000;
 	
-	uint16_t tv = servos_angle_to_timervalue(0);
+	uint16_t tv = servos_pan_angle_to_timervalue(0);
 	/* at 10000, 1ms corresponds to 750 ticks 
 		10000 = 20ms, 10000ticks/20 = 20ms/20, 
 		500ticks = 1ms
 	*/
 	TEST_ASSERT_EQUAL(500, tv);
 
-	tv = servos_angle_to_timervalue(3.141592653589793);
+	tv = servos_pan_angle_to_timervalue(3.141592653589793);
 
 	/* at 10000, 2ms correspond to 10000/20*2=1000ticks*/
 
 	TEST_ASSERT_EQUAL(1000, tv);
 
-	tv = servos_angle_to_timervalue(3.141592653589793/2);
+	tv = servos_pan_angle_to_timervalue(3.141592653589793/2);
 
 	TEST_ASSERT_EQUAL(750, tv);
+}
 
-
+void test_servos_tilt_angle_to_timervalue(void) {
+	servos_timer_period = 10000;
 	
-
-
+	uint16_t tv = servos_tilt_angle_to_timervalue(0);
 	
+	/* this should correspond to 2ms */
+	
+	TEST_ASSERT_EQUAL(1000, tv);
 }

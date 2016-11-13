@@ -54,14 +54,14 @@ float servos_get_tilt_angle(void){
 void servos_set_pan_angle(float new_pan_angle){
     uint16_t tim_value = 0;
 	servos_pan_angle = new_pan_angle;
-    tim_value = servos_angle_to_timervalue(new_pan_angle);
+    tim_value = servos_pan_angle_to_timervalue(new_pan_angle);
     servos_set_pan_angle_hal(tim_value);
 }
 
 void servos_set_tilt_angle(float new_tilt_angle){
     uint16_t tim_value = 0;
 	servos_tilt_angle = new_tilt_angle;
-    tim_value = servos_angle_to_timervalue(new_tilt_angle);
+    tim_value = servos_tilt_angle_to_timervalue(new_tilt_angle);
     servos_set_tilt_angle_hal(tim_value);
 }
 
@@ -77,19 +77,22 @@ void servos_set_position(float x, float y){
     servos_set_pan_angle(ang.pan);
 }
 /*	
-	
+	from -1 to +1 in x
+	from -0.5 to +0.5 in y
 */
 
 Angles servos_point_to_angles(Point* p) {
 	Angles ang;
 	
-	ang.tilt = atan2(p->y, servos_distance_to_wall);
-	ang.pan = atan2(p->x, servos_distance_to_wall);
+	ang.tilt = atan2(p->y + 0.5, 1);
+	
+	
+	ang.pan = atan2(p->x, 1);
 	
 	return ang;
 }
 
-uint16_t servos_angle_to_timervalue(float angle){
+uint16_t servos_pan_angle_to_timervalue(float angle){
 	/* angle is between 0 and pi, we have to
 		bring it between 1 ms and 2ms
 		Fullscale 1ms
@@ -103,8 +106,27 @@ uint16_t servos_angle_to_timervalue(float angle){
 	timer_value_float = value_1ms * angle / (3.141592653589793);
 	timer_value_float += value_1ms;
 	timer_value_uint16_t = (uint16_t)timer_value_float;
+	
+	return timer_value_float;
+}
 
+uint16_t servos_tilt_angle_to_timervalue(float angle){
+	/* angle is between 0 and pi/4, we have to
+		bring it between 1 ms and 2ms
+		Fullscale 1ms
+		at zero angle, the servo must be at one extremity,
+		-> 2ms
+	*/
 
+	float value_1ms;
+	float timer_value_float;
+	uint16_t timer_value_uint16_t;
+
+	value_1ms = ((float)servos_timer_period) / 20.0;
+	angle = 3.141592653589793 - angle;
+	timer_value_float = timer_value_float = value_1ms * angle / (3.141592653589793);
+	timer_value_float += value_1ms;
+	timer_value_uint16_t = (uint16_t)timer_value_float;
 	
 	return timer_value_float;
 }
