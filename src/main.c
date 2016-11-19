@@ -28,6 +28,8 @@
 #include "servos_app.h"
 #include "servos_hal.h"
 #include "laser_app.h"
+#include "display.h"
+#include "font5x7.h"
 
 extern volatile uint32_t ms_ticks;
 
@@ -40,9 +42,17 @@ int main(void){
 	clock_init();
     servos_init();
     laser_init();
-
+    display_init();
+ 
     
-    
+    glcd_command(0xA5); 
+    glcd_select_screen((uint8_t *)&glcd_buffer, &glcd_bbox);
+	glcd_reset();
+	glcd_ST7565R_init();
+    glcd_tiny_set_font(Font5x7, 5, 7, GLCD_LCD_HEIGHT, GLCD_LCD_WIDTH);
+	glcd_clear_buffer();
+	glcd_tiny_draw_string(0, 0, "TEST!");
+	glcd_write();
 
     //servos_set_pan_angle(((float)a)/1000.0);
     servos_set_position(-1, -1);

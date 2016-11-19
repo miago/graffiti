@@ -124,7 +124,7 @@ uint16_t servos_tilt_angle_to_timervalue(float angle){
 
 	value_1ms = ((float)servos_timer_period) / 20.0;
 	angle = 3.141592653589793 - angle;
-	timer_value_float = timer_value_float = value_1ms * angle / (3.141592653589793);
+    timer_value_float = value_1ms * angle / (3.141592653589793);
 	timer_value_float += value_1ms;
 	timer_value_uint16_t = (uint16_t)timer_value_float;
 	
