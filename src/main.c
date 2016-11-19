@@ -27,6 +27,7 @@
 #include "clock_app.h"
 #include "servos_app.h"
 #include "servos_hal.h"
+#include "laser_app.h"
 
 extern volatile uint32_t ms_ticks;
 
@@ -38,14 +39,30 @@ int main(void){
     int a = 0;
 	clock_init();
     servos_init();
+    laser_init();
 
     
+    
 
-        //servos_set_pan_angle(((float)a)/1000.0);
-        servos_set_position(-1, -1);
-        delay_ms(30);
-        servos_set_position(1, 1);
- 
+    //servos_set_pan_angle(((float)a)/1000.0);
+    servos_set_position(-1, -1);
+    delay_ms(300);
+    servos_set_position(1, 1);
+    
+    laser_set_off();
+    
+    delay_ms(1000);
+    
+    laser_set_on();
+    
+    delay_ms(1000);
+    
+    laser_set_off();
+    
+    delay_ms(1000);
+    
+    laser_set_on();
+
     
     while(1);
     
