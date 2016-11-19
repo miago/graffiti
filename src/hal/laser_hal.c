@@ -30,8 +30,6 @@
 void laser_init_hal(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
 	/* set clock related stuff */
-	
-	/* TODO check which port it is! */
 	if(LASER_GPIO_PORT == GPIOA)
 	{
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
@@ -45,7 +43,15 @@ void laser_init_hal(void){
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 	GPIO_InitStructure.GPIO_Pin = LASER_GPIO_PIN;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);	
+	
+	if(LASER_GPIO_PORT == GPIOA)
+	{
+		GPIO_Init(GPIOA, &GPIO_InitStructure);	
+	} else if(LASER_GPIO_PORT == GPIOB){
+		GPIO_Init(GPIOB, &GPIO_InitStructure);	
+	} else if(LASER_GPIO_PORT == GPIOC){
+		GPIO_Init(GPIOC, &GPIO_InitStructure);	
+	}
 }
 
 void laser_set_status_hal(enum laser_status_t new_state){

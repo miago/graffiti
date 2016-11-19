@@ -40,7 +40,7 @@ void servos_init_hal(void){
     timer_structure.TIM_Prescaler = 143; 
     TIM_TimeBaseInit(TIM3, &timer_structure);
     
-    /* Timer Output Compare Mode PWM */
+    /* Timer Output Compare Mode PWM, Channel 3: PAN */
     TIM_OC_InitStructure.TIM_OCMode = TIM_OCMode_PWM1;
     TIM_OC_InitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
     TIM_OC_InitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
@@ -51,7 +51,7 @@ void servos_init_hal(void){
     TIM_OC_InitStructure.TIM_Pulse = 750; 
     TIM_OC3Init(TIM3, &TIM_OC_InitStructure);
 
-    /* Timer Output Compare Mode PWM */
+    /* Timer Output Compare Mode PWM, Channel 4; TILT */
     TIM_OC_InitStructure.TIM_OCMode = TIM_OCMode_PWM1;
     TIM_OC_InitStructure.TIM_OCIdleState = TIM_OCIdleState_Reset;
     TIM_OC_InitStructure.TIM_OCNIdleState = TIM_OCNIdleState_Set;
@@ -64,12 +64,12 @@ void servos_init_hal(void){
   
     
     GPIO_PinRemapConfig(GPIO_FullRemap_TIM3, ENABLE);
-    /* PC8 signal out */
+    /* PC8 signal out, Timer 3, Channel 3 */
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
-    /* PC9 signal out */
+    /* PC9 signal out, Timer 3, Channel 4*/
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;

@@ -35,7 +35,7 @@ enum laser_status_t {
 
  
 #define LASER_GPIO_PIN GPIO_Pin_6
-#define LASER_GPIO_PORT GPIOA
+#define LASER_GPIO_PORT GPIOC
 
 void laser_init_hal(void);
 void laser_set_status_hal(enum laser_status_t new_state);
