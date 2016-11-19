@@ -40,14 +40,17 @@
 #define ROW3 16
 #define ROW4 24
 
+#define MIN_PERIOD 100
+#define MAX_PERIOD 1500
+
 extern volatile uint32_t ms_ticks;
 
 extern uint8_t joystick_state;
 extern uint8_t joystick_rising;
 extern uint8_t joystick_falling;
 
-float laser_position_x = 0;
-float laser_position_y = 0;
+uint16_t laser_period_x = 750;
+uint16_t laser_period_y = 750;
  
  /**  
  * @brief main function
@@ -66,20 +69,10 @@ int main(void){
 	glcd_clear_buffer();
 	glcd_tiny_draw_string(0, 0, "TEST!");
 	glcd_write();
-
-    //servos_set_pan_angle(((float)a)/1000.0);
-    servos_set_position(-1, -1);
-    delay_ms(300);
-    servos_set_position(1, 1);
     
-    laser_set_off();
-    delay_ms(1000);
-    laser_set_on();
-    delay_ms(1000);
-    laser_set_off();
-    delay_ms(1000);
-    laser_set_on();
-
+    servos_set_pan_angle_hal(laser_period_x);
+    servos_set_tilt_angle(laser_period_y);
+    
     while(1);
     /*    
         if(JOYSTICK_LV_IS(BTN_UP)){
@@ -127,8 +120,8 @@ void update_display(void){
         sprintf(text0, "Laser State: OFF");
     }
  
-    sprintf(text1,     "X pos:       %2.2f", laser_position_x);
-    sprintf(text2,     "Y pos:       %2.2f", laser_position_y);
+    sprintf(text1,     "X period:    %d", laser_period_x);
+    sprintf(text2,     "Y period:    %d", laser_period_y);
 
     glcd_clear();
     glcd_draw_string_xy(10, ROW1, text0);
@@ -149,35 +142,35 @@ void scheduler(void){
     }
     
     if(JOYSTICK_LV_IS(JOYSTICK_RIGHT)){
-        laser_position_x += 0.05;
-        if(laser_position_x > CANVAS_X_MAX) {
-            laser_position_x = CANVAS_X_MAX;
+        laser_period_x += 1;
+        if(laser_period_x > MAX_PERIOD) {
+            laser_period_x = MAX_PERIOD;
         }
-        servos_set_position(laser_position_x, laser_position_y);
+        servos_set_pan_angle_hal(laser_period_x);
     }
     
     if(JOYSTICK_LV_IS(JOYSTICK_LEFT)){
-        laser_position_x -= 0.05;
-        if(laser_position_x < CANVAS_X_MIN) {
-            laser_position_x = CANVAS_X_MIN;
+        laser_period_x -= 1;
+        if(laser_period_x < MIN_PERIOD) {
+            laser_period_x = MIN_PERIOD;
         }
-        servos_set_position(laser_position_x, laser_position_y);
+        servos_set_pan_angle_hal(laser_period_x);
     }
     
     if(JOYSTICK_LV_IS(JOYSTICK_UP)){
-        laser_position_y += 0.05;
-        if(laser_position_y > CANVAS_Y_MAX) {
-            laser_position_y = CANVAS_Y_MAX;
+        laser_period_y += 1;
+        if(laser_period_y > MAX_PERIOD) {
+            laser_period_y = MAX_PERIOD;
         }
-        servos_set_position(laser_position_x, laser_position_y);
+        servos_set_tilt_angle_hal(laser_period_y);
     }
     
     if(JOYSTICK_LV_IS(JOYSTICK_DOWN)){
-        laser_position_y -= 0.05;
-        if(laser_position_y < CANVAS_Y_MIN) {
-            laser_position_y = CANVAS_Y_MIN;
+        laser_period_y -= 1;
+        if(laser_period_y < MIN_PERIOD) {
+            laser_period_y = MIN_PERIOD;
         }
-        servos_set_position(laser_position_x, laser_position_y);
+        servos_set_tilt_angle_hal(laser_period_y);
     }
 }
 

@@ -60,7 +60,7 @@ int main(void)
   RUN_TEST(test_servos_set_servos_tilt_angle, 61);
   RUN_TEST(test_servos_point_to_angles, 86);
   RUN_TEST(test_servos_pan_angle_to_timervalue, 119);
-  RUN_TEST(test_servos_tilt_angle_to_timervalue, 140);
+  RUN_TEST(test_servos_tilt_angle_to_timervalue, 135);
 
   return (UnityEnd());
 }

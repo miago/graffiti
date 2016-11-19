@@ -98,35 +98,15 @@ uint16_t servos_pan_angle_to_timervalue(float angle){
 		Fullscale 1ms
 	*/
 
-	float value_1ms;
-	float timer_value_float;
-	uint16_t timer_value_uint16_t;
-
-	value_1ms = ((float)servos_timer_period) / 20.0;
-	timer_value_float = value_1ms * angle / (3.141592653589793);
-	timer_value_float += value_1ms;
-	timer_value_uint16_t = (uint16_t)timer_value_float;
-	
-	return timer_value_float;
+	return angle*(1208.0-292.0)/(3.141592653589793)+750.0;
 }
 
 uint16_t servos_tilt_angle_to_timervalue(float angle){
-	/* angle is between 0 and pi/4, we have to
-		bring it between 1 ms and 2ms
-		Fullscale 1ms
-		at zero angle, the servo must be at one extremity,
-		-> 2ms
+	/*  0 degree: 375
+    *  90 degree: 815
 	*/
+    
+    
+    return 2*angle*(815.0-375.0)/(3.141592653589793)+375.0;
 
-	float value_1ms;
-	float timer_value_float;
-	uint16_t timer_value_uint16_t;
-
-	value_1ms = ((float)servos_timer_period) / 20.0;
-	angle = 3.141592653589793 - angle;
-    timer_value_float = value_1ms * angle / (3.141592653589793);
-	timer_value_float += value_1ms;
-	timer_value_uint16_t = (uint16_t)timer_value_float;
-	
-	return timer_value_float;
 }
