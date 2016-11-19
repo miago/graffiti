@@ -1,5 +1,6 @@
 #include "stm32f10x.h"
 #include "clock_hal.h"
+#include "main.h"
 
 volatile uint32_t ms_ticks;
 volatile uint32_t uwTimingDelay;
@@ -27,6 +28,7 @@ void SysTick_Handler(void)
 {
     ms_ticks++;	
     TimingDelay_Decrement();
+    millisecond_interval_timer();
 }
 
 

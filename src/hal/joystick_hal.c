@@ -80,7 +80,7 @@ void joystick_update_hal(void){
             JOYSTICK_LV_CL(joystick_ids[id]);
         } else { /* Button is high */
             /* Rising Edge, button state was previously low */
-            if(JOYSTICK_LV_IS(joystick_ids[id])){
+            if(!JOYSTICK_LV_IS(joystick_ids[id])){
                 JOYSTICK_RE_ST(joystick_ids[id]);
             }
             JOYSTICK_LV_ST(joystick_ids[id]);
