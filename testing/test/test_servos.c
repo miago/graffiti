@@ -120,29 +120,25 @@ void test_servos_pan_angle_to_timervalue(void) {
 	servos_timer_period = 10000;
 	
 	uint16_t tv = servos_pan_angle_to_timervalue(0);
-	/* at 10000, 1ms corresponds to 750 ticks 
-		10000 = 20ms, 10000ticks/20 = 20ms/20, 
-		500ticks = 1ms
-	*/
-	TEST_ASSERT_EQUAL(500, tv);
-
-	tv = servos_pan_angle_to_timervalue(3.141592653589793);
-
-	/* at 10000, 2ms correspond to 10000/20*2=1000ticks*/
-
-	TEST_ASSERT_EQUAL(1000, tv);
-
-	tv = servos_pan_angle_to_timervalue(3.141592653589793/2);
 
 	TEST_ASSERT_EQUAL(750, tv);
+	
+	tv = servos_pan_angle_to_timervalue(-3.141592653589793/2);
+
+	TEST_ASSERT_UINT16_WITHIN(1, 292, tv);
+	
+	tv = servos_pan_angle_to_timervalue(+3.141592653589793/2);
+
+	TEST_ASSERT_EQUAL(1208, tv);
 }
 
 void test_servos_tilt_angle_to_timervalue(void) {
-	servos_timer_period = 10000;
-	
 	uint16_t tv = servos_tilt_angle_to_timervalue(0);
 	
-	/* this should correspond to 2ms */
-	
-	TEST_ASSERT_EQUAL(1000, tv);
+	/* by definition/measurement */
+	TEST_ASSERT_EQUAL(375, tv);
+
+	tv = servos_tilt_angle_to_timervalue(3.14159265/2);
+
+	TEST_ASSERT_EQUAL(815, tv);
 }
