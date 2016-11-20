@@ -13,7 +13,6 @@
 extern float servos_tilt_angle;
 extern float servos_pan_angle;
 extern float servos_distance_to_wall;
-extern uint16_t servos_timer_period;
 
 void setUp(void){
   /* This is run before EACH TEST */
@@ -117,7 +116,6 @@ void test_servos_point_to_angles(void){
 }
 
 void test_servos_pan_angle_to_timervalue(void) {
-	servos_timer_period = 10000;
 	
 	uint16_t tv = servos_pan_angle_to_timervalue(0);
 
