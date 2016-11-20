@@ -322,7 +322,7 @@
             <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
-            <uC99>0</uC99>
+            <uC99>1</uC99>
             <useXO>0</useXO>
             <v6Lang>1</v6Lang>
             <v6LangP>1</v6LangP>
@@ -333,9 +333,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>STM32F10X_MD, GLCD_DEVICE_STM32F10X, GLCD_CONTROLLER_ST7565R, GLCD_LCD_WIDTH=128, GLCD_LCD_HEIGHT=32, GLCD_INIT_NHD_C12832A1Z_FSW_FBW_3V3</Define>
               <Undefine></Undefine>
-              <IncludePath>.\inc\hal;.\inc\app</IncludePath>
+              <IncludePath>.\inc\hal;.\inc\app;.\glcd;.\glcd\fonts;.\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -383,6 +383,11 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\main.c</FilePath>
+            </File>
+            <File>
+              <FileName>display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\display.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -433,6 +438,41 @@
               <FileName>joystick_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hal\joystick_hal.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>glcd</GroupName>
+          <Files>
+            <File>
+              <FileName>glcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\glcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>graphics.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\graphics.c</FilePath>
+            </File>
+            <File>
+              <FileName>graphs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\graphs.c</FilePath>
+            </File>
+            <File>
+              <FileName>text.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\text.c</FilePath>
+            </File>
+            <File>
+              <FileName>text_tiny.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\text_tiny.c</FilePath>
+            </File>
+            <File>
+              <FileName>ST7565R.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\controllers\ST7565R.c</FilePath>
             </File>
           </Files>
         </Group>

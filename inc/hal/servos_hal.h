@@ -29,6 +29,25 @@
 
 #define TIMER_PERIOD (10000)
 
+#define SERVOS_TILT_FIRST_POINT_ANGLE 0
+#define SERVOS_TILT_FIRST_POINT_TIM_VALUE 375.0
+
+#define SERVOS_TILT_SECOND_POINT_ANGLE (3.141592653589793/2.0)
+#define SERVOS_TILT_SECOND_POINT_TIM_VALUE 815.0
+
+
+/*  measured between -90 and +90 degrees
+*	at -90 the value was 292
+* 	at +90 the value was 1208 
+* 	(not really, I adapted them to be symmetric around 750)
+*/
+#define SERVOS_PAN_FIRST_POINT_ANGLE (-3.141592653589793/2.0)
+#define SERVOS_PAN_FIRST_POINT_TIM_VALUE 292.0
+
+#define SERVOS_PAN_SECOND_POINT_ANGLE (+3.141592653589793/2.0)
+#define SERVOS_PAN_SECOND_POINT_TIM_VALUE 1208.0
+
+
 typedef struct {
 	float x, y;
 } Point;

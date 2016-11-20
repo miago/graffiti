@@ -93,20 +93,29 @@ Angles servos_point_to_angles(Point* p) {
 }
 
 uint16_t servos_pan_angle_to_timervalue(float angle){
-	/* angle is between 0 and pi, we have to
-		bring it between 1 ms and 2ms
-		Fullscale 1ms
+	/* 
+		y = mx + q
+		m = Dy / Dx = (value2 - value1) / (angle2 - angle1)
+		q = y - mx = value2 - m*angle2
 	*/
-
-	return angle*(1208.0-292.0)/(3.141592653589793)+750.0;
+	float m, q;
+	
+	m = (SERVOS_PAN_SECOND_POINT_TIM_VALUE - SERVOS_PAN_FIRST_POINT_TIM_VALUE) / (SERVOS_PAN_SECOND_POINT_ANGLE - SERVOS_PAN_FIRST_POINT_ANGLE);
+	
+	q = SERVOS_PAN_SECOND_POINT_TIM_VALUE - m * SERVOS_PAN_SECOND_POINT_ANGLE;
+	return (uint16_t)(m*angle + q);
 }
 
 uint16_t servos_tilt_angle_to_timervalue(float angle){
-	/*  0 degree: 375
-    *  90 degree: 815
+	/* 
+		y = mx + q
+		m = Dy / Dx = (value2 - value1) / (angle2 - angle1)
+		q = y - mx = value2 - m*angle2
 	*/
-    
-    
-    return 2*angle*(815.0-375.0)/(3.141592653589793)+375.0;
-
+	float m, q;
+	
+	m = (SERVOS_TILT_SECOND_POINT_TIM_VALUE - SERVOS_TILT_FIRST_POINT_TIM_VALUE) / (SERVOS_TILT_SECOND_POINT_ANGLE - SERVOS_TILT_FIRST_POINT_ANGLE);
+	
+	q = SERVOS_TILT_SECOND_POINT_TIM_VALUE - m * SERVOS_TILT_SECOND_POINT_ANGLE;
+	return (uint16_t)(m*angle + q);
 }
