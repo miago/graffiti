@@ -32,11 +32,19 @@ uint8_t joystick_state = 0x00;
 uint8_t joystick_rising = 0x00;
 uint8_t joystick_falling = 0x00;
 
+/**
+ * Initialize the joystick   
+ */ 
+
 void joystick_init(void){
 	joystick_rising = 0x00;
 	joystick_falling = 0x00;
 }
 
+
+/**
+ * Function to update the state of the joytick at the application level
+ */
 void joystick_update(void){
 	joystick_update_hal();
 }

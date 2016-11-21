@@ -20,6 +20,7 @@
  * @file laser_hal.h
  * @author Mirco E. Gysin
  * @date 04 Nov 2016
+ * @brief Header file of laser_hal.c
  */
  
 #ifndef LASER_HAL_H

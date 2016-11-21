@@ -40,6 +40,10 @@ GPIO_TypeDef * joystick_ports[5] = {   GPIOA,      	GPIOB,      	GPIOC,      	GP
 uint16_t joystick_pins[5] =        {      4,        0,          	1,          	0,          	5};
 uint16_t joystick_ids[5] =         {  JOYSTICK_UP,  JOYSTICK_DOWN,  JOYSTICK_LEFT,  JOYSTICK_RIGHT, JOYSTICK_CENTER};
  
+/**
+ * Initialize the joystick at hardware level
+ */
+
 void joystick_init_hal(void){
 	
 	uint8_t cnt = 0;
@@ -67,6 +71,10 @@ void joystick_init_hal(void){
 		GPIO_Init(joystick_ports[cnt], & GPIO_InitStructure);	
 	}
 }
+
+/**
+* Update the joystick values at hardware level
+*/
 
 void joystick_update_hal(void){
 	uint8_t id = 0;

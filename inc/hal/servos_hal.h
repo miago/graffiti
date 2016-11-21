@@ -20,6 +20,7 @@
  * @file laser_hal.h
  * @author Mirco E. Gysin
  * @date 05 Nov 2016
+ * @brief Header file of servos_hal.c
  */
  
 #ifndef SERVOS_HAL_H
@@ -29,6 +30,10 @@
 
 #define TIMER_PERIOD (10000)
 
+/*  measured between 0 and +90 degrees
+*	at 0 the value was 375
+* 	at +90 the value was 815
+*/
 #define SERVOS_TILT_FIRST_POINT_ANGLE 0
 #define SERVOS_TILT_FIRST_POINT_TIM_VALUE 375.0
 
