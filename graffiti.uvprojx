@@ -333,9 +333,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>STM32F10X_MD, GLCD_DEVICE_STM32F10X, GLCD_CONTROLLER_ST7565R, GLCD_LCD_WIDTH=128, GLCD_LCD_HEIGHT=32, GLCD_INIT_NHD_C12832A1Z_FSW_FBW_3V3</Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>.\inc\alia;.\inc\app;.\inc\hal;.\glcd;.\glcd\fonts</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -377,42 +377,92 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Source Group 1</GroupName>
+          <GroupName>general</GroupName>
           <Files>
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Source\main.c</FilePath>
+              <FilePath>.\src\main.c</FilePath>
             </File>
             <File>
-              <FileName>thread.c</FileName>
+              <FileName>display.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Source\thread.c</FilePath>
-            </File>
-            <File>
-              <FileName>myAppData.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Source\myAppData.h</FilePath>
-            </File>
-            <File>
-              <FileName>Timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Source\Timer.c</FilePath>
+              <FilePath>.\src\alia\display.c</FilePath>
             </File>
             <File>
               <FileName>Semaphore.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\Source\Semaphore.c</FilePath>
+              <FilePath>.\src\alia\Semaphore.c</FilePath>
             </File>
             <File>
-              <FileName>MemPool.c</FileName>
+              <FileName>Thread.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\MemPool.c</FilePath>
+              <FilePath>.\src\alia\Thread.c</FilePath>
             </File>
             <File>
-              <FileName>MsgQueue.c</FileName>
+              <FileName>Timer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\MsgQueue.c</FilePath>
+              <FilePath>.\src\alia\Timer.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app</GroupName>
+          <Files>
+            <File>
+              <FileName>clock_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\clock_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>joystick_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\joystick_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>laser_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\laser_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>potentiometers_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\potentiometers_app.c</FilePath>
+            </File>
+            <File>
+              <FileName>servos_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\servos_app.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>hal</GroupName>
+          <Files>
+            <File>
+              <FileName>clock_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\clock_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>joystick_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\joystick_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>laser_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\laser_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>potentiometers_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\potentiometers_hal.c</FilePath>
+            </File>
+            <File>
+              <FileName>servos_hal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\hal\servos_hal.c</FilePath>
             </File>
           </Files>
         </Group>
