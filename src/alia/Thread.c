@@ -2,6 +2,7 @@
 #include <cmsis_os.h>		// CMSIS RTOS header file
 #include "stm32f10x.h"
 #include "myAppData.h"
+#include "laser_app.h"
 
 /*----------------------------------------------------------------------------
  *      Thread 1 'Thread_Name': Sample thread
@@ -39,3 +40,13 @@ void ThreadA(void const *argument)
 		osThreadYield();	// suspend thread
 	}
 }
+
+
+int Init_ThreadLaser(threadData_t * dataBlock){
+    laser_init();
+}
+
+void ThreadLaser(void const *argument){
+    
+}
+

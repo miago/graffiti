@@ -33,6 +33,7 @@
 */
 
 #include "glcd.h"
+#include "osObjects.h"
 
 static uint8_t glcd_map(uint8_t x1, uint8_t x2, uint8_t x);
 
@@ -110,7 +111,7 @@ void glcd_scrolling_bar_graph_timing(uint8_t x, uint8_t y, uint8_t width, uint8_
 	}
 	
 	if (delay) {
-		delay_ms(delay);
+		osDelay(delay);
 	}
 }
 
