@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD, GLCD_DEVICE_STM32F10X, GLCD_CONTROLLER_ST7565R, GLCD_LCD_WIDTH=128, GLCD_LCD_HEIGHT=32, GLCD_INIT_NHD_C12832A1Z_FSW_FBW_3V3</Define>
               <Undefine></Undefine>
-              <IncludePath>.\inc\alia;.\inc\app;.\inc\hal;.\glcd;.\glcd\fonts</IncludePath>
+              <IncludePath>.\inc\alia;.\inc\app;.\inc\hal;.\glcd;.\glcd\fonts;.\inc\tasks</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -463,6 +463,16 @@
               <FileName>servos_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hal\servos_hal.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>tasks</GroupName>
+          <Files>
+            <File>
+              <FileName>laser_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\tasks\laser_task.c</FilePath>
             </File>
           </Files>
         </Group>
