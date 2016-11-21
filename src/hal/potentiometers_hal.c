@@ -1,4 +1,5 @@
 #include "potentiometers_hal.h"
+#include <stdint.h>
 
 void potentiometers_init_hal(void){
 

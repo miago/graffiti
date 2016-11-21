@@ -2,34 +2,7 @@
 #include "clock_hal.h"
 #include "main.h"
 
-volatile uint32_t ms_ticks;
-volatile uint32_t uwTimingDelay;
 RCC_ClocksTypeDef RCC_Clocks;
-
-/**
-  * @brief  Decrements the TimingDelay variable.
-  * @param  None
-  * @retval None
-  */
-void TimingDelay_Decrement(void)
-{
-    if (uwTimingDelay != 0x00)
-    { 
-        uwTimingDelay--;
-	}
-}
-
-/**
-  * @brief  This function handles SysTick Handler.
-  * @param  None
-  * @retval None
-  */
-void SysTick_Handler(void)
-{
-    ms_ticks++;	
-    TimingDelay_Decrement();
-    millisecond_interval_timer();
-}
 
 
 void clock_init_hal(void){

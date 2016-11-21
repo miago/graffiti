@@ -19,6 +19,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "display.h"
+#include "osObjects.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -111,7 +112,8 @@ void glcd_reset(void)
 	/* GLCD RESET LOW() */
 	GPIO_ResetBits(GPIOA, GPIO_Pin_6);
 	
-	delay_ms(1);
+    /* wait 10 ms */
+    osDelay(10);
 	
 	/* GLCD RESET HIGH() */
 	GPIO_SetBits(GPIOA, GPIO_Pin_6);

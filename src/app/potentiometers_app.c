@@ -1,7 +1,7 @@
 
 
 #include "potentiometers_app.h"
-
+#include <stdint.h>
 
 void potentiometers_init(void){
 
