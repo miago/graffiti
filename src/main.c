@@ -1,189 +1,140 @@
-/* 
- * This file is part of the Graffiti distribution 
- * (https://github.com/miago/graffiti).
- * Copyright (c) 2016 Mirco Gysin.
- * 
- * This program is free software: you can redistribute it and/or modify  
- * it under the terms of the GNU General Public License as published by  
- * the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful, but 
- * WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License 
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+/**
+* CMSIS-RTOS Starter application: Creates three identical threads for a LED
+* @file     main.c
+* @date     21.11.2016
+* @version  1.0
+* @author   bfh-ti/dnd1
+* 
+* @warning
+* THE PRESENT SOFTWARE CODE IS FOR EDUCATIONAL PURPOSES ONLY, VOID OF ANY
+* WARRANTY WHATSOEVER
+*
+* <h2><center>smile from time to time</center></h2>
+*
+* @section sHw Hardware used
+*
+* Nucleo64STM32F103
+*
+* @section sIde Development tool used
+*
+* uVision MDK-ARM 5.21a or later
+*/
+
+/*----------------------------------------------------------------------------
+ * CMSIS-RTOS 'main' function template
+ *---------------------------------------------------------------------------*/
+
+#define osObjectsPublic		// define objects in main module
+#include "osObjects.h"		// RTOS object definitions
+
+#include "stm32f10x.h"
+#include "myAppData.h"
+#include <stdio.h>
+
+extern void Init_Timers(void);
+
+extern int Init_ThreadA(threadData_t *);
+
+threadData_t threadData[3];
+
+char text[20];
+
+void RCC_Configuration(void)
+{
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+}
+
+void GPIO_Configuration(void)
+{
+	GPIO_InitTypeDef GPIO_InitStructure;
+
+	/* Joystick center button input for button reading */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	//$TASK LED on Nucleo
+	/* 
+	   red D5 PB4
+	   green D9 PC7
+	   blue D8 PA9
+	 */
+	// Blue LED on PA9, Arduino D8
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	// Green LED on PC7, Arduino D9
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
+	GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	// Red LED on PB4
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
+	GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+	// Blue LED pin PB4 JTAG  JNTRST pin must be Alternate Remap to be a GPIO
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
+
+	// Active low elements, so switch them on!
+	GPIO_SetBits(GPIOA, GPIO_Pin_9);
+	GPIO_SetBits(GPIOC, GPIO_Pin_7);
+	GPIO_SetBits(GPIOB, GPIO_Pin_4);
+
+}
 
 /**
- * @file main.c
- * @author Mirco E. Gysin
- * @date 20 Oct 2016
- * @brief This is the main file of the Temporary Graffity project 
+* Initialisation code 
+*/
+void initialisation(void)
+{
+
+	SystemCoreClockUpdate();
+
+	RCC_Configuration();
+	GPIO_Configuration();
+}
+
+/*
+ * main: initialize and start the system
  */
-  
-#include "stm32f10x.h"
-#include "clock_app.h"
-#include "servos_app.h"
-#include "servos_hal.h"
-#include "laser_app.h"
-#include "laser_hal.h"
-#include "display.h"
-#include "font5x7.h"
-#include "joystick_app.h"
-#include "joystick_hal.h"
-#include "main.h"
+int main(void)
+{
+	initialisation();
 
-#define ROW1 0
-#define ROW2 8
-#define ROW3 16
-#define ROW4 24
+	osKernelInitialize();	// initialize CMSIS-RTOS, stop scheduler
 
-#define MIN_PERIOD 100
-#define MAX_PERIOD 1500
+	// initialize peripherals here
 
-extern volatile uint32_t ms_ticks;
+	// create 'thread' functions that start executing,
+	// example: tid_name = osThreadCreate (osThread(name), NULL);
 
-extern uint8_t joystick_state;
-extern uint8_t joystick_rising;
-extern uint8_t joystick_falling;
+	threadData[0].delay = 1000;
+	threadData[0].pinId = GPIO_Pin_9;
+	threadData[0].portId = GPIOA;
+	threadData[0].beepFreq = 1;
+	threadData[0].beepTime = 1;
+	Init_ThreadA(&threadData[0]);
 
-uint16_t laser_period_x = 750;
-uint16_t laser_period_y = 750;
- 
- /**  
- * @brief main function
- */
-int main(void){
-	clock_init();
-    servos_init();
-    laser_init();
-    display_init();
-   
-    glcd_command(0xA5); 
-    glcd_select_screen((uint8_t *)&glcd_buffer, &glcd_bbox);
-	glcd_reset();
-	glcd_ST7565R_init();
-    glcd_tiny_set_font(Font5x7, 5, 7, GLCD_LCD_HEIGHT, GLCD_LCD_WIDTH);
-	glcd_clear_buffer();
-	glcd_tiny_draw_string(0, 0, "TEST!");
-	glcd_write();
-    
-    servos_set_pan_angle_hal(laser_period_x);
-    servos_set_tilt_angle(laser_period_y);
-    
-    while(1);
-    /*    
-        if(JOYSTICK_LV_IS(BTN_UP)){
-            if(timer_frequency != 5000){
-                timer_frequency += 100;
-            }
-            
-            updateTimer(timer_frequency, timer_duty_cycle);
-        }
-        
-        if(JOYSTICK_LV_IS(BTN_DOWN)){
-            if(timer_frequency != 200){
-                timer_frequency -= 100;
-            }
-            updateTimer(timer_frequency, timer_duty_cycle);
-        }
-        
-        if(JOYSTICK_LV_IS(BTN_RIGHT)){
-            if(timer_duty_cycle != 100){
-                timer_duty_cycle += 1;
-            }
-            updateTimer(timer_frequency, timer_duty_cycle);
-        }
-        	
-        if(JOYSTICK_LV_IS(BTN_LEFT)){
-            if(timer_duty_cycle != 0){
-                timer_duty_cycle -= 1;
-            }
-            updateTimer(timer_frequency, timer_duty_cycle);
-        }
-        
-        */
-}
+	threadData[1].delay = 2000;
+	threadData[1].pinId = GPIO_Pin_7;
+	threadData[1].portId = GPIOC;
+	threadData[1].beepFreq = 2;
+	threadData[1].beepTime = 2;
+	Init_ThreadA(&threadData[1]);
 
-void update_display(void){
-    
-    char text0[25];
-    char text1[25];
-    char text2[25];
-    
-    
-    if(laser_get_status() == on){
-        sprintf(text0, "Laser State: ON");
-    } else {
-        sprintf(text0, "Laser State: OFF");
-    }
- 
-    sprintf(text1,     "X period:    %d", laser_period_x);
-    sprintf(text2,     "Y period:    %d", laser_period_y);
+	threadData[2].delay = 1500;
+	threadData[2].pinId = GPIO_Pin_4;
+	threadData[2].portId = GPIOB;
+	threadData[2].beepFreq = 3;
+	threadData[2].beepTime = 3;
+	Init_ThreadA(&threadData[2]);
 
-    glcd_clear();
-    glcd_draw_string_xy(10, ROW1, text0);
-    glcd_draw_string_xy(10, ROW2, text1);
-    glcd_draw_string_xy(10, ROW3, text2);
-    
-    glcd_write();
-}
+	Init_Timers();
 
-void scheduler(void){
-    if(JOYSTICK_RE_IS(JOYSTICK_CENTER)){
-        if(laser_get_status() == on){
-            laser_set_off();
-        } else {
-            laser_set_on();
-        }
-        JOYSTICK_RE_CL(JOYSTICK_CENTER);      
-    }
-    
-    if(JOYSTICK_LV_IS(JOYSTICK_RIGHT)){
-        laser_period_x += 1;
-        if(laser_period_x > MAX_PERIOD) {
-            laser_period_x = MAX_PERIOD;
-        }
-        servos_set_pan_angle_hal(laser_period_x);
-    }
-    
-    if(JOYSTICK_LV_IS(JOYSTICK_LEFT)){
-        laser_period_x -= 1;
-        if(laser_period_x < MIN_PERIOD) {
-            laser_period_x = MIN_PERIOD;
-        }
-        servos_set_pan_angle_hal(laser_period_x);
-    }
-    
-    if(JOYSTICK_LV_IS(JOYSTICK_UP)){
-        laser_period_y += 1;
-        if(laser_period_y > MAX_PERIOD) {
-            laser_period_y = MAX_PERIOD;
-        }
-        servos_set_tilt_angle_hal(laser_period_y);
-    }
-    
-    if(JOYSTICK_LV_IS(JOYSTICK_DOWN)){
-        laser_period_y -= 1;
-        if(laser_period_y < MIN_PERIOD) {
-            laser_period_y = MIN_PERIOD;
-        }
-        servos_set_tilt_angle_hal(laser_period_y);
-    }
-}
-
-void millisecond_interval_timer(void){
-    if((ms_ticks % 100) == 0){
-        joystick_update();
-    }
-    
-    if((ms_ticks % 100) == 0){
-        scheduler();
-    }
-    
-    if((ms_ticks % 80) == 0){
-        update_display();
-    }
+	osKernelStart();	// start thread execution 
 }
