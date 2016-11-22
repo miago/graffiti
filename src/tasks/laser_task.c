@@ -30,9 +30,11 @@
 
 
 /*----------------------------------------------------------------------------
- *      Thread 1 'Thread_Name': Sample thread
+ *      Thread 1 'Laser': Thread to control the laser beam
  *---------------------------------------------------------------------------*/
 
+osMailQDef(laser_mail_box, 3, laserMailFormat_t);
+osMailQId laser_mail_box;
 
 osThreadId tid_Laser;		// thread id
 osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);	// thread object
@@ -44,7 +46,7 @@ osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);	// thread object
 
 int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 {
-
+	laser_mail_box = osMailCreate(osMailQ(mail_box), NULL);
 	tid_Laser = osThreadCreate(osThread(Laser_Thread), laserDataBlock);
 	laserDataBlock->tid_Thread = tid_Thread;
 	if (!tid_Thread)
