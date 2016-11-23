@@ -22,3 +22,14 @@
  * @date 23 Nov 2016
  * @brief This file contains the definitions for controller_task.c
  */
+
+#ifndef CONTROLLER_TASK_H
+#define CONTROLLER_TASK_H
+
+typedef struct 
+{
+    osThreadId tid_Controller;           //!< Handle to the current thread
+} ControllerDataBlock_t;                 //!< Controller Data block defined
+
+
+#endif

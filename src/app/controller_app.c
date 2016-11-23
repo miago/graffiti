@@ -22,3 +22,29 @@
  * @date 23 Nov 2016
  * @brief This file contains the logic of the controller
  */
+
+#include "controller_app.h"
+#include "joystick_task.h"
+
+controllerState_t controller_state;
+drawingMode_t controller_drawing_mode;
+
+
+void controller_init(void)
+{
+	controller_state = INIT;
+	controller_drawing_mode = FREE_DRAWING;
+}
+
+
+void controller_process_laser() 
+{
+
+}
+
+void controller_process_joystick() 
+{
+	if(controller_drawing_mode == FREE_DRAWING) {
+		if
+	}
+}

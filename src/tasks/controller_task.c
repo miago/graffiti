@@ -22,3 +22,47 @@
  * @date 23 Nov 2016
  * @brief This file contains the interface for the controller logic
  */
+
+
+#include <cmsis_os.h>
+#include "controller_app.h"
+
+
+/*----------------------------------------------------------------------------
+ *      Thread 'Controller': Manages the whole system
+ *---------------------------------------------------------------------------*/
+
+osThreadId tid_controller;		// thread id
+osThreadDef(Controller_Thread, osPriorityNormal, 1, 0);	// thread object
+
+extern osMailQId joystick_mail_box;
+
+/**
+* Initialized the Joystick Thread
+* @param joystickDataBlock
+*/
+
+int Controller_Thread_Init(controllerDataBlock_t * controlllerDataBlock)
+{
+	tid_controller = osThreadCreate(osThread(Controller_Thread), controllerDataBlock);
+	controllerDataBlock->tid_Thread = tid_controller;
+	if (!tid_controller)
+		return (-1);
+
+	return (0);
+}
+
+void Controller_Thread(void const *argument)
+{
+
+	threadData_t *value = (threadData_t *) argument;
+
+	while (1) {
+		evt = osMailGet(joystick_mail_box, osWaitForever);
+		if(evt.status == osEventMail){
+			
+		}
+		osThreadYield();	// suspend thread
+	}
+}
+

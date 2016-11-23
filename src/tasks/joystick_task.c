@@ -25,40 +25,43 @@
 
 
 #include <cmsis_os.h>
-#include "laser_app.h"
-#include "laser_task.h"
+#include "joystick_app.h"
+#include "joystick_task.h"
 
 
 /*----------------------------------------------------------------------------
- *      Thread 'Laser': Thread to control the laser beam
+ *      Thread 'Joystick': Thread to control the joystick
  *---------------------------------------------------------------------------*/
 
 osThreadId tid_joystick;		// thread id
 osThreadDef(Joystick_Thread, osPriorityNormal, 1, 0);	// thread object
 
+osMailQDef(joystick_mail_box, 3, joystickMailFormat_t);
+osMailQId joystick_mail_box;
+
 /**
-* Initialized the Laser Thread
-* @param laserDataBlock
+* Initialized the Joystick Thread
+* @param joystickDataBlock
 */
 
-int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
+int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock)
 {
-	laser_mail_box = osMailCreate(osMailQ(mail_box), NULL);
-	tid_Laser = osThreadCreate(osThread(Laser_Thread), laserDataBlock);
-	laserDataBlock->tid_Thread = tid_Thread;
-	if (!tid_Thread)
+	joystick_mail_box = osMailCreate(osMailQ(joystick_mail_box), NULL);
+	tid_joystick = osThreadCreate(osThread(Joystick_Thread), joystickDataBlock);
+	joystickDataBlock->tid_Thread = tid_joystick;
+	if (!tid_joystick)
 		return (-1);
 
 	return (0);
 }
 
-void Laser_Thread(void const *argument)
+void Joystick_Thread(void const *argument)
 {
 
 	threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
-		evt = osMailGet(laser_mail_box, osWaitForever);
+		evt = osMailGet(joystick_mail_box, osWaitForever);
 		if(evt.status == osEventMail){
 			
 		}

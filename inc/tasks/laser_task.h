@@ -1,3 +1,28 @@
+/* 
+ * This file is part of the Graffiti distribution 
+ * (https://github.com/miago/graffiti).
+ * Copyright (c) 2016 Mirco Gysin.
+ * 
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file laser_task.h
+ * @author Mirco E. Gysin
+ * @date 23 Nov 2016
+ * @brief Header file of laser_task.c
+ */
+
 #ifndef LASER_TASK_H
 #define LASER_TASK_H
 
@@ -13,13 +38,14 @@ typedef enum
 	GET_STATUS, /* Request status of the laser */
 	SET_STATUS, /* Request that laser is set to 
 	the provided value */
-	SET_TOGGLE, /* Request that the laser status 
+	TOGGLE, /* Request that the laser status 
 	is toggled */
 
 
 	/* Responses which the laser can give */
 	OK, /* This is the default response when the message
 	has been executed correctly */
+	ERROR, /* This is the response given when an error occured */
 	STATUS /* With this messsage the status of the led
 	is provided */
 } laserMessageType_t;

@@ -22,3 +22,22 @@
  * @date 23 Nov 2016
  * @brief This file contains the definitions for controller_app.c
  */
+
+#ifndef CONTROLLER_APP_H
+#define CONTROLLER_APP_H
+
+typedef enum {
+	UNINIT,
+	INITIALIZED,
+	CONFIGURATION,
+	DRAWING
+} controllerState_t;
+
+typedef enum {
+	FREE_DRAWING,
+	FROM_TEXT
+} drawingMode_t;
+
+void controller_init(void);
+
+#endif
