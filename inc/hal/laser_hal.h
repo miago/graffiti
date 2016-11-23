@@ -27,19 +27,23 @@
 #define LASER_HAL_H
 
 #include "stm32f10x.h"
-
-enum laser_status_t {
-	undefined,
-	on, 
-	off
-};
-
  
 #define LASER_GPIO_PIN GPIO_Pin_6
 #define LASER_GPIO_PORT GPIOC
 
+
+typedef enum
+{
+	undefined,
+	on, 
+	off
+} laser_status_t;
+
+
+
+
 void laser_init_hal(void);
-void laser_set_status_hal(enum laser_status_t new_state);
-enum laser_status_t laser_get_status_hal(void);
+void laser_set_status_hal(laser_status_t new_state);
+laser_status_t laser_get_status_hal(void);
 
 #endif

@@ -17,10 +17,10 @@
  */
 
 /**
- * @file laser_task.c
+ * @file joystick_task.c
  * @author Mirco E. Gysin
- * @date 21 Nov 2016
- * @brief This file contains the layer for the thread
+ * @date 22 Nov 2016
+ * @brief This file contains the joystick for the thread
  */
 
 
@@ -33,11 +33,8 @@
  *      Thread 'Laser': Thread to control the laser beam
  *---------------------------------------------------------------------------*/
 
-osMailQDef(laser_mail_box, 3, laserMailFormat_t);
-osMailQId laser_mail_box;
-
-osThreadId tid_Laser;		// thread id
-osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);	// thread object
+osThreadId tid_joystick;		// thread id
+osThreadDef(Joystick_Thread, osPriorityNormal, 1, 0);	// thread object
 
 /**
 * Initialized the Laser Thread

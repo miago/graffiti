@@ -23,7 +23,6 @@
  * @brief This file controls the laser beam. 
  */
 
-
 #include "laser_app.h"
 #include "laser_hal.h"
 #include <stdint.h>
@@ -35,15 +34,15 @@ void laser_init(void){
 }
 
 void laser_set_on(void){
-	enum laser_status_t ls = on;
+	laser_status_t ls = on;
 	laser_set_status_hal(ls);
 }
 
 void laser_set_off(void){
-	enum laser_status_t ls = off;
+	laser_status_t ls = off;
 	laser_set_status_hal(ls);
 }
 
-enum laser_status_t laser_get_status(void){
+laser_status_t laser_get_status(void){
 	return laser_get_status_hal();
 }

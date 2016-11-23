@@ -25,7 +25,7 @@
 
 #include "stm32f10x.h"
 #include "laser_hal.h"
-
+#include "laser_app.h"
 
 void laser_init_hal(void){
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -54,7 +54,7 @@ void laser_init_hal(void){
 	}
 }
 
-void laser_set_status_hal(enum laser_status_t new_state){
+void laser_set_status_hal(laser_status_t new_state){
 	if(new_state == on) {
 		GPIO_WriteBit(LASER_GPIO_PORT, LASER_GPIO_PIN, Bit_SET);
 	} else if(new_state == off){
@@ -62,7 +62,7 @@ void laser_set_status_hal(enum laser_status_t new_state){
 	}
 }
 
-enum laser_status_t laser_get_status_hal(void){
+laser_status_t laser_get_status_hal(void){
 	uint8_t laser_status_u8;
 	laser_status_u8 = GPIO_ReadOutputDataBit(LASER_GPIO_PORT, LASER_GPIO_PIN);
 	if(laser_status_u8 == 0x00) {
