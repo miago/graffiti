@@ -40,8 +40,6 @@ typedef enum
 } laser_status_t;
 
 
-
-
 void laser_init_hal(void);
 void laser_set_status_hal(laser_status_t new_state);
 laser_status_t laser_get_status_hal(void);

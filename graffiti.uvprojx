@@ -477,6 +477,41 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>glcd</GroupName>
+          <Files>
+            <File>
+              <FileName>glcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\glcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>graphics.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\graphics.c</FilePath>
+            </File>
+            <File>
+              <FileName>graphs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\graphs.c</FilePath>
+            </File>
+            <File>
+              <FileName>text.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\text.c</FilePath>
+            </File>
+            <File>
+              <FileName>text_tiny.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\text_tiny.c</FilePath>
+            </File>
+            <File>
+              <FileName>ST7565R.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\glcd\controllers\ST7565R.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
         <Group>

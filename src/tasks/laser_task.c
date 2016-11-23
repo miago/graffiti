@@ -46,10 +46,10 @@ osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);	// thread object
 
 int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 {
-	laser_mail_box = osMailCreate(osMailQ(mail_box), NULL);
+	laser_mail_box = osMailCreate(osMailQ(laser_mail_box), NULL);
 	tid_Laser = osThreadCreate(osThread(Laser_Thread), laserDataBlock);
-	laserDataBlock->tid_Thread = tid_Thread;
-	if (!tid_Thread)
+	laserDataBlock->tid_Laser = tid_Laser;
+	if (!tid_Laser)
 		return (-1);
 
 	return (0);
@@ -57,8 +57,8 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 
 void Laser_Thread(void const *argument)
 {
-
-	threadData_t *value = (threadData_t *) argument;
+    osEvent evt;	
+	//threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
 		evt = osMailGet(laser_mail_box, osWaitForever);
