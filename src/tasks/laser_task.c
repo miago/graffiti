@@ -52,6 +52,9 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 	if (!tid_Laser)
 		return (-1);
 
+	/* Initialisation */
+	laser_init();
+
 	return (0);
 }
 
