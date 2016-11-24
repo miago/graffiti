@@ -33,8 +33,11 @@
  *      Thread 'Laser': Thread to control the laser beam
  *---------------------------------------------------------------------------*/
 
-osMailQDef(laser_mail_box, 3, laserMailFormat_t);
-osMailQId laser_mail_box;
+osMessageQId laser_mq;																		//define the message queue
+osMessageQDef (laser_mq, 0x16, laserMailFormat_t);
+
+osPoolDef(laser_mail_pool, 16, laserMailFormat_t);																		//define memory pool
+osPoolId laser_mail_pool;
 
 osThreadId tid_Laser;		// thread id
 osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);	// thread object
@@ -46,9 +49,11 @@ osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);	// thread object
 
 int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 {
-	laser_mail_box = osMailCreate(osMailQ(laser_mail_box), NULL);
+    laser_mq = osMessageCreate(osMessageQ(laser_mq),NULL);
 	tid_Laser = osThreadCreate(osThread(Laser_Thread), laserDataBlock);
 	laserDataBlock->tid_Laser = tid_Laser;
+    
+    laser_mail_pool = osPoolCreate(osPool(laser_mail_pool));
 	if (!tid_Laser)
 		return (-1);
 
@@ -63,8 +68,8 @@ void Laser_Thread(void const *argument)
 	//threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
-		evt = osMailGet(laser_mail_box, osWaitForever);
-		if(evt.status == osEventMail){
+        evt = osMessageGet(laser_mq, osWaitForever);
+		if(evt.status == osEventMessage){
             laser_mail = (laserMailFormat_t*)evt.value.p;	
             laser_process_message(laser_mail);
 		}

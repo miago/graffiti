@@ -36,11 +36,12 @@ extern void Init_Timers(void);
 
 extern int Init_ThreadA(threadData_t *);
 
-extern osMailQId laser_mail_box;
+extern osMessageQId laser_mq;
 
 threadData_t threadData[3];
 laserDataBlock_t laserData;
 
+extern osPoolId  laser_mail_pool;
 laserMailFormat_t* laser_mail;
 
 char text[20];
@@ -132,17 +133,16 @@ int main(void)
     
     Laser_Thread_Init(&laserData);
     
-    laser_mail = (laserMailFormat_t*)osMailAlloc(laser_mail_box, osWaitForever);	
     
+    laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
     laser_mail->message_type = INIT;
     laser_mail->laser_state = 0;
-    osMailPut(laser_mail_box, &laser_mail);	
+    osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
     
-    laser_mail = (laserMailFormat_t*)osMailAlloc(laser_mail_box, osWaitForever);
+    laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
     laser_mail->message_type = SET_STATUS;
     laser_mail->laser_state = 1;
-    
-    osMailPut(laser_mail_box, &laser_mail);
+    osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
     
 
 	Init_Timers();

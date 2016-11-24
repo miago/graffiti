@@ -57,7 +57,6 @@ int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock)
 
 void Joystick_Thread(void const *argument)
 {
-
     osEvent evt;
 	joystickDataBlock_t *value = (joystickDataBlock_t *) argument;
 
