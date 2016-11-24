@@ -30,19 +30,30 @@
 #include "stm32f10x.h"
 #include "myAppData.h"
 #include "laser_task.h"
+#include "joystick_task.h"
+#include "controller_task.h"
 #include <stdio.h>
 
 extern void Init_Timers(void);
 
 extern int Init_ThreadA(threadData_t *);
 
-extern osMessageQId laser_mq;
 
 threadData_t threadData[3];
-laserDataBlock_t laserData;
 
-extern osPoolId  laser_mail_pool;
+controllerDataBlock_t controllerData;
+
+laserDataBlock_t laserData;
+extern osPoolId laser_mail_pool;
 laserMailFormat_t* laser_mail;
+extern osMessageQId laser_mq;
+
+joystickDataBlock_t joystickData;
+extern osPoolId joystick_mail_pool;
+joystickMailFormat_t* joystick_mail;
+extern osMessageQId joystick_mq;
+
+
 
 char text[20];
 
@@ -129,18 +140,28 @@ int main(void)
 	threadData[0].beepTime = 1;
 	Init_ThreadA(&threadData[0]);
     
+    // init controller
+    
+    Controller_Thread_Init(&controllerData);
+    
+    // init joystick
+    
+    Joystick_Thread_Init(&joystickData);
+    joystick_mail = (joystickMailFormat_t *)osPoolAlloc(joystick_mail_pool);
+    joystick_mail->message_type = JOYSTICK_INIT;
+    osMessagePut(joystick_mq, (uint32_t)joystick_mail, osWaitForever);
+   
     // init laser
     
     Laser_Thread_Init(&laserData);
     
-    
     laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
-    laser_mail->message_type = INIT;
+    laser_mail->message_type = LASER_INIT;
     laser_mail->laser_state = 0;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
     
     laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
-    laser_mail->message_type = SET_STATUS;
+    laser_mail->message_type = LASER_SET_STATUS;
     laser_mail->laser_state = 1;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
     

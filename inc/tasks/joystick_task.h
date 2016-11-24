@@ -28,62 +28,15 @@
 
 #include <stdint.h>
 #include <cmsis_os.h>
+#include "joystick_app.h"
 
-typedef enum
-{
-	/* commands to the joystick module */
-	INIT,
-	UPDATE_REQ, /* someone is requesting an update of state of 
-	the joysticks buttons*/
-
-	/* commands from the joystick module to other modules */
-
-	UPDATED_VALUES /* provided the updated values */
-} joystickMessageType_t;
-
-typedef enum
-{
-	evt_pressed,
-	evt_released,
-	evt_no_event
-} joystickButtonEvent_t;
-
-typedef enum
-{
-	st_pressed,
-	st_released
-} joystickButtonState_t;
-
-typedef struct
-{
-	joystickButtonEvent_t center;
-	joystickButtonEvent_t left;
-	joystickButtonEvent_t right;
-	joystickButtonEvent_t up;
-	joystickButtonEvent_t down;
-} joystickEvent_t;
-
-typedef struct
-{
-	joystickButtonState_t center;
-	joystickButtonState_t left;
-	joystickButtonState_t right;
-	joystickButtonState_t up;
-	joystickButtonState_t down;
-} joystickState_t;
-
-typedef struct
-{
-	joystickMessageType_t message_type;
-    joystickState_t joystick_state;
-    joystickEvent_t joystick_event;
-} joystickMailFormat_t;
 
 typedef struct
 {
     osThreadId tid_Joystick;  
 } joystickDataBlock_t;
 
+int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock);
 void Joystick_Thread(void const *argument);
 
 #endif

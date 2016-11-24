@@ -37,19 +37,18 @@
 typedef enum
 {
 	/* Messages which can be sent to the laser */
-	INIT, /* Reuqest initialisation of laser */
-	GET_STATUS, /* Request status of the laser */
-	SET_STATUS, /* Request that laser is set to 
+	LASER_INIT, /* Reuqest initialisation of laser */
+	LASER_GET_STATUS, /* Request status of the laser */
+	LASER_SET_STATUS, /* Request that laser is set to 
 	the provided value */
-	TOGGLE, /* Request that the laser status 
+	LASER_TOGGLE, /* Request that the laser status 
 	is toggled */
 
-
 	/* Responses which the laser can give */
-	OK, /* This is the default response when the message
+	LASER_OK, /* This is the default response when the message
 	has been executed correctly */
-	LS_ERROR, /* This is the response given when an error occured */
-	STATUS /* With this messsage the status of the led
+	LASER_ERROR, /* This is the response given when an error occured */
+	LASER_STATUS /* With this messsage the status of the led
 	is provided */
 } laserMessageType_t;
 

@@ -27,7 +27,8 @@
 #include <cmsis_os.h>
 #include "controller_app.h"
 #include "controller_task.h"
-
+#include "joystick_app.h"
+#include "laser_app.h"
 
 /*----------------------------------------------------------------------------
  *      Thread 'Controller': Manages the whole system
@@ -36,8 +37,17 @@
 osThreadId tid_controller;		// thread id
 osThreadDef(Controller_Thread, osPriorityNormal, 1, 0);	// thread object
 
-extern osMailQId joystick_mail_box;
+/* new a message queue for every component: JOYSTICK */
+osMessageQId joystick_mq_in;																		//define the message queue
+osMessageQDef (joystick_mq_in, 0x16, joystickMailFormat_t);
+extern osMessageQId joystick_mq;
+extern osPoolId joystick_mail_pool;
 
+/* new a message queue for every component: LASER*/
+osMessageQId laser_mq_in;																		//define the message queue
+osMessageQDef (laser_mq_in, 0x16, laserMailFormat_t);
+extern osMessageQId laser_mq;
+extern osPoolId laser_mail_pool;
 /**
 * Initialized the Joystick Thread
 * @param joystickDataBlock
@@ -45,6 +55,7 @@ extern osMailQId joystick_mail_box;
 
 int Controller_Thread_Init(controllerDataBlock_t * controllerDataBlock)
 {
+    joystick_mq_in = osMessageCreate(osMessageQ(joystick_mq_in),NULL);
 	tid_controller = osThreadCreate(osThread(Controller_Thread), controllerDataBlock);
 	controllerDataBlock->tid_Controller = tid_controller;
 	if (!tid_controller)
@@ -57,13 +68,25 @@ void Controller_Thread(void const *argument)
 {
     osEvent evt;
     
-	controllerDataBlock_t *value = (controllerDataBlock_t *) argument;
+    joystickMailFormat_t* joystick_mail;
+    laserMailFormat_t* laser_mail;
 
 	while (1) {
-		evt = osMailGet(joystick_mail_box, osWaitForever);
-		if(evt.status == osEventMail){
-			
-		}
+        evt = osMessageGet(joystick_mq_in, 1);
+		if(evt.status == osEventMessage){ 
+            joystick_mail = (joystickMailFormat_t*)evt.value.p;	
+            if(joystick_mail->message_type == JOYSTICK_UPDATED_VALUES) {
+                if(joystick_mail->joystick_event->center == JOYSTICK_EVT_PRESSED) {
+                    laser_mail = (laserMailFormat_t*) osPoolAlloc(laser_mail_pool);
+                    if(laser_mail){
+                        laser_mail->message_type = LASER_TOGGLE;
+                        osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
+                    }
+                }
+            }
+            osPoolFree(joystick_mail_pool, joystick_mail);
+		} 
+
 		osThreadYield();	// suspend thread
 	}
 }

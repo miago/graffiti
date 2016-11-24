@@ -52,17 +52,25 @@ laser_status_t laser_get_status(void){
 
 void laser_process_message(laserMailFormat_t* mail)
 {
+    laser_status_t laser_status;
     switch(mail->message_type){
-        case INIT:
+        case LASER_INIT:
             laser_init();
             break;
-        case SET_STATUS:
+        case LASER_SET_STATUS:
             if(mail->laser_state == 1) {
                 laser_set_on();
             } else {
                 laser_set_off();
             }
             break;
+        case LASER_TOGGLE:
+            laser_status = laser_get_status();
+            if(laser_status == on) {
+                laser_set_off();
+            } else {
+                laser_set_on();
+            }
         default:
             break;
     }

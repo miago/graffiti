@@ -33,11 +33,16 @@
  *      Thread 'Joystick': Thread to control the joystick
  *---------------------------------------------------------------------------*/
 
+
 osThreadId tid_joystick;		// thread id
 osThreadDef(Joystick_Thread, osPriorityNormal, 1, 0);	// thread object
 
-osMailQDef(joystick_mail_box, 3, joystickMailFormat_t);
-osMailQId joystick_mail_box;
+osMessageQId joystick_mq;																		//define the message queue
+osMessageQDef (joystick_mq, 0x16, joystickMailFormat_t);
+extern osMessageQId joystick_mq_in;
+
+osPoolDef(joystick_mail_pool, 16, joystickMailFormat_t);																		//define memory pool
+osPoolId joystick_mail_pool;
 
 /**
 * Initialized the Joystick Thread
@@ -46,9 +51,11 @@ osMailQId joystick_mail_box;
 
 int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock)
 {
-	joystick_mail_box = osMailCreate(osMailQ(joystick_mail_box), NULL);
+	joystick_mq = osMessageCreate(osMessageQ(joystick_mq),NULL);
 	tid_joystick = osThreadCreate(osThread(Joystick_Thread), joystickDataBlock);
 	joystickDataBlock->tid_Joystick = tid_joystick;
+    joystick_mail_pool = osPoolCreate(osPool(joystick_mail_pool));
+    
 	if (!tid_joystick)
 		return (-1);
 
@@ -57,14 +64,29 @@ int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock)
 
 void Joystick_Thread(void const *argument)
 {
-    osEvent evt;
-	joystickDataBlock_t *value = (joystickDataBlock_t *) argument;
+    osEvent evt;	
+    joystickMailFormat_t* joystick_mail;
+	//threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
-		evt = osMailGet(joystick_mail_box, osWaitForever);
-		if(evt.status == osEventMail){
-			
+        evt = osMessageGet(joystick_mq, 1);
+		if(evt.status == osEventMessage){
+            joystick_mail = (joystickMailFormat_t*)evt.value.p;	
+            joystick_process_message(joystick_mail);
+            osPoolFree(joystick_mail_pool, joystick_mail);
 		}
+        
+        osDelay(50);
+        joystick_mail = (joystickMailFormat_t*) osPoolAlloc(joystick_mail_pool);
+        if(joystick_mail) {
+            joystick_mail->message_type = JOYSTICK_UPDATE_REQ;
+            joystick_mail = joystick_process_message(joystick_mail);
+            osMessagePut(joystick_mq_in, (uint32_t)joystick_mail, osWaitForever);
+        } else
+        {
+            joystick_mail = (joystickMailFormat_t*) 1337;
+        }
+       
 		osThreadYield();	// suspend thread
 	}
 }

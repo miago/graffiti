@@ -52,8 +52,8 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
     laser_mq = osMessageCreate(osMessageQ(laser_mq),NULL);
 	tid_Laser = osThreadCreate(osThread(Laser_Thread), laserDataBlock);
 	laserDataBlock->tid_Laser = tid_Laser;
-    
     laser_mail_pool = osPoolCreate(osPool(laser_mail_pool));
+    
 	if (!tid_Laser)
 		return (-1);
 
@@ -64,7 +64,6 @@ void Laser_Thread(void const *argument)
 {
     osEvent evt;	
     laserMailFormat_t* laser_mail;
-    int a = 0;
 	//threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
@@ -72,6 +71,7 @@ void Laser_Thread(void const *argument)
 		if(evt.status == osEventMessage){
             laser_mail = (laserMailFormat_t*)evt.value.p;	
             laser_process_message(laser_mail);
+            osPoolFree(laser_mail_pool, laser_mail);
 		}
 		osThreadYield();	// suspend thread
 	}

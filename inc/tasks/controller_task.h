@@ -34,6 +34,7 @@ typedef struct
     osThreadId tid_Controller;           //!< Handle to the current thread
 } controllerDataBlock_t;                 //!< Controller Data block defined
 
+int Controller_Thread_Init(controllerDataBlock_t * controllerDataBlock);
 void Controller_Thread(void const *argument);
 
 #endif
