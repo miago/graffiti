@@ -26,6 +26,9 @@
 #ifndef JOYSTICK_TASK_H
 #define JOYSTICK_TASK_H
 
+#include <stdint.h>
+#include <cmsis_os.h>
+
 typedef enum
 {
 	/* commands to the joystick module */
@@ -40,33 +43,33 @@ typedef enum
 
 typedef enum
 {
-	pressed,
-	released,
-	no_event
+	evt_pressed,
+	evt_released,
+	evt_no_event
 } joystickButtonEvent_t;
 
 typedef enum
 {
-	pressed,
-	released
+	st_pressed,
+	st_released
 } joystickButtonState_t;
 
 typedef struct
 {
-	joystickButtonEvent_t center,
-	joystickButtonEvent_t left,
-	joystickButtonEvent_t right,
-	joystickButtonEvent_t up,
-	joystickButtonEvent_t down
+	joystickButtonEvent_t center;
+	joystickButtonEvent_t left;
+	joystickButtonEvent_t right;
+	joystickButtonEvent_t up;
+	joystickButtonEvent_t down;
 } joystickEvent_t;
 
 typedef struct
 {
-	joystickButtonState_t center,
-	joystickButtonState_t left,
-	joystickButtonState_t right,
-	joystickButtonState_t up,
-	joystickButtonState_t down
+	joystickButtonState_t center;
+	joystickButtonState_t left;
+	joystickButtonState_t right;
+	joystickButtonState_t up;
+	joystickButtonState_t down;
 } joystickState_t;
 
 typedef struct
@@ -75,5 +78,12 @@ typedef struct
     joystickState_t joystick_state;
     joystickEvent_t joystick_event;
 } joystickMailFormat_t;
+
+typedef struct
+{
+    osThreadId tid_Joystick;  
+} joystickDataBlock_t;
+
+void Joystick_Thread(void const *argument);
 
 #endif

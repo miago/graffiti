@@ -26,10 +26,14 @@
 #ifndef CONTROLLER_TASK_H
 #define CONTROLLER_TASK_H
 
+#include <stdint.h>
+#include <cmsis_os.h>
+
 typedef struct 
 {
     osThreadId tid_Controller;           //!< Handle to the current thread
-} ControllerDataBlock_t;                 //!< Controller Data block defined
+} controllerDataBlock_t;                 //!< Controller Data block defined
 
+void Controller_Thread(void const *argument);
 
 #endif

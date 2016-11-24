@@ -32,7 +32,7 @@ drawingMode_t controller_drawing_mode;
 
 void controller_init(void)
 {
-	controller_state = INIT;
+	controller_state = INITIALIZED;
 	controller_drawing_mode = FREE_DRAWING;
 }
 
@@ -45,6 +45,6 @@ void controller_process_laser()
 void controller_process_joystick() 
 {
 	if(controller_drawing_mode == FREE_DRAWING) {
-		if
+		
 	}
 }

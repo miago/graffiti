@@ -48,7 +48,7 @@ int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock)
 {
 	joystick_mail_box = osMailCreate(osMailQ(joystick_mail_box), NULL);
 	tid_joystick = osThreadCreate(osThread(Joystick_Thread), joystickDataBlock);
-	joystickDataBlock->tid_Thread = tid_joystick;
+	joystickDataBlock->tid_Joystick = tid_joystick;
 	if (!tid_joystick)
 		return (-1);
 
@@ -58,7 +58,8 @@ int Joystick_Thread_Init(joystickDataBlock_t * joystickDataBlock)
 void Joystick_Thread(void const *argument)
 {
 
-	threadData_t *value = (threadData_t *) argument;
+    osEvent evt;
+	joystickDataBlock_t *value = (joystickDataBlock_t *) argument;
 
 	while (1) {
 		evt = osMailGet(joystick_mail_box, osWaitForever);

@@ -52,21 +52,21 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 	if (!tid_Laser)
 		return (-1);
 
-	/* Initialisation */
-	laser_init();
-
 	return (0);
 }
 
 void Laser_Thread(void const *argument)
 {
     osEvent evt;	
+    laserMailFormat_t* laser_mail;
+    int a = 0;
 	//threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
 		evt = osMailGet(laser_mail_box, osWaitForever);
 		if(evt.status == osEventMail){
-			
+            laser_mail = (laserMailFormat_t*)evt.value.p;	
+            laser_process_message(laser_mail);
 		}
 		osThreadYield();	// suspend thread
 	}

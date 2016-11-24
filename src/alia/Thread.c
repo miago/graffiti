@@ -40,13 +40,3 @@ void ThreadA(void const *argument)
 		osThreadYield();	// suspend thread
 	}
 }
-
-
-int Init_ThreadLaser(threadData_t * dataBlock){
-    laser_init();
-}
-
-void ThreadLaser(void const *argument){
-    
-}
-

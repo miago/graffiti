@@ -26,6 +26,7 @@
 
 #include <cmsis_os.h>
 #include "controller_app.h"
+#include "controller_task.h"
 
 
 /*----------------------------------------------------------------------------
@@ -42,10 +43,10 @@ extern osMailQId joystick_mail_box;
 * @param joystickDataBlock
 */
 
-int Controller_Thread_Init(controllerDataBlock_t * controlllerDataBlock)
+int Controller_Thread_Init(controllerDataBlock_t * controllerDataBlock)
 {
 	tid_controller = osThreadCreate(osThread(Controller_Thread), controllerDataBlock);
-	controllerDataBlock->tid_Thread = tid_controller;
+	controllerDataBlock->tid_Controller = tid_controller;
 	if (!tid_controller)
 		return (-1);
 
@@ -54,8 +55,9 @@ int Controller_Thread_Init(controllerDataBlock_t * controlllerDataBlock)
 
 void Controller_Thread(void const *argument)
 {
-
-	threadData_t *value = (threadData_t *) argument;
+    osEvent evt;
+    
+	controllerDataBlock_t *value = (controllerDataBlock_t *) argument;
 
 	while (1) {
 		evt = osMailGet(joystick_mail_box, osWaitForever);

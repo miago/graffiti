@@ -26,6 +26,7 @@
 #ifndef LASER_APP_H
 #define LASER_APP_H
 
+#include "laser_task.h"
 #include "laser_hal.h"
 
 #define CANVAS_X_MIN -1
@@ -33,9 +34,35 @@
 #define CANVAS_Y_MIN -0.5
 #define CANVAS_Y_MAX +0.5
 
+typedef enum
+{
+	/* Messages which can be sent to the laser */
+	INIT, /* Reuqest initialisation of laser */
+	GET_STATUS, /* Request status of the laser */
+	SET_STATUS, /* Request that laser is set to 
+	the provided value */
+	TOGGLE, /* Request that the laser status 
+	is toggled */
+
+
+	/* Responses which the laser can give */
+	OK, /* This is the default response when the message
+	has been executed correctly */
+	LS_ERROR, /* This is the response given when an error occured */
+	STATUS /* With this messsage the status of the led
+	is provided */
+} laserMessageType_t;
+
+typedef struct
+{
+	laserMessageType_t message_type;
+    uint8_t laser_state;
+} laserMailFormat_t;
+
 void laser_init(void);
 void laser_set_on(void);
 void laser_set_off(void);
+void laser_process_message(laserMailFormat_t* mail);
 
 laser_status_t laser_get_status(void);
 

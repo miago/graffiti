@@ -434,6 +434,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\app\servos_app.c</FilePath>
             </File>
+            <File>
+              <FileName>controller_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\controller_app.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -473,6 +478,16 @@
               <FileName>laser_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\tasks\laser_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>controller_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\tasks\controller_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>joystick_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\tasks\joystick_task.c</FilePath>
             </File>
           </Files>
         </Group>

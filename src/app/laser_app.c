@@ -25,15 +25,18 @@
 
 #include "laser_app.h"
 #include "laser_hal.h"
+#include "laser_task.h"
 #include <stdint.h>
 
 
-void laser_init(void){
+void laser_init(void)
+{
 	laser_init_hal();
 	laser_set_off();
 }
 
-void laser_set_on(void){
+void laser_set_on(void)
+{
 	laser_status_t ls = on;
 	laser_set_status_hal(ls);
 }
@@ -45,4 +48,22 @@ void laser_set_off(void){
 
 laser_status_t laser_get_status(void){
 	return laser_get_status_hal();
+}
+
+void laser_process_message(laserMailFormat_t* mail)
+{
+    switch(mail->message_type){
+        case INIT:
+            laser_init();
+            break;
+        case SET_STATUS:
+            if(mail->laser_state == 1) {
+                laser_set_on();
+            } else {
+                laser_set_off();
+            }
+            break;
+        default:
+            break;
+    }
 }
