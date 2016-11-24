@@ -28,7 +28,6 @@
 #include "laser_task.h"
 #include <stdint.h>
 
-
 void laser_init(void)
 {
 	laser_init_hal();

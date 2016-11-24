@@ -17,37 +17,28 @@
  */
 
 /**
- * @file controller_app.h
+ * @file servos_task.h
  * @author Mirco E. Gysin
  * @date 23 Nov 2016
- * @brief This file contains the definitions for controller_app.c
+ * @brief Header file of servos_task.c
  */
 
-#ifndef CONTROLLER_APP_H
-#define CONTROLLER_APP_H
+#ifndef SERVOS_TASK_K
+#define SERVOS_TASK_K
 
-#include "laser_app.h"
-#include "joystick_app.h"
+#include <stdint.h>
+#include <cmsis_os.h>
+#include "servos_app.h"
+#include "servos_hal.h"
 
-typedef enum {
-	UNINIT,
-	INITIALIZED,
-	CONFIGURATION,
-	DRAWING
-} controllerState_t;
+typedef struct 
+{
+    osThreadId tid_Servos;           //!< Handle to the current thread
+} servosDataBlock_t;                 //!< Thread Data block defined
 
-typedef enum {
-	FREE_DRAWING,
-	FROM_TEXT
-} drawingMode_t;
 
-void controller_init(void);
-void controller_process_laser(laserMailFormat_t * laser_mail);
-void controller_process_joystick(joystickMailFormat_t * joystick_mail);
-
-void controller_increment_x_position(void);
-void controller_decrement_x_position(void);
-void controller_increment_y_position(void);
-void controller_decrement_y_position(void);
+/* function prototypes */ 
+void Servos_Thread(void const *argument);
+int Servos_Thread_Init(servosDataBlock_t * servosDataBlock);
 
 #endif

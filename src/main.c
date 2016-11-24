@@ -32,6 +32,7 @@
 #include "laser_task.h"
 #include "joystick_task.h"
 #include "controller_task.h"
+#include "servos_task.h"
 #include <stdio.h>
 
 extern void Init_Timers(void);
@@ -53,6 +54,10 @@ extern osPoolId joystick_mail_pool;
 joystickMailFormat_t* joystick_mail;
 extern osMessageQId joystick_mq;
 
+servosDataBlock_t servosData;
+extern osPoolId servos_mail_pool;
+servosMailFormat_t* servos_mail;
+extern osMessageQId servos_mq;
 
 
 char text[20];
@@ -164,6 +169,14 @@ int main(void)
     laser_mail->message_type = LASER_SET_STATUS;
     laser_mail->laser_state = 1;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
+    
+    // init servos
+    
+    Servos_Thread_Init(&servosData);
+    
+    servos_mail = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
+    servos_mail->message_type = SERVOS_INIT;
+    osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
     
 
 	Init_Timers();

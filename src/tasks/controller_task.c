@@ -69,21 +69,13 @@ void Controller_Thread(void const *argument)
     osEvent evt;
     
     joystickMailFormat_t* joystick_mail;
-    laserMailFormat_t* laser_mail;
 
 	while (1) {
         evt = osMessageGet(joystick_mq_in, 1);
 		if(evt.status == osEventMessage){ 
             joystick_mail = (joystickMailFormat_t*)evt.value.p;	
-            if(joystick_mail->message_type == JOYSTICK_UPDATED_VALUES) {
-                if(joystick_mail->joystick_event->center == JOYSTICK_EVT_PRESSED) {
-                    laser_mail = (laserMailFormat_t*) osPoolAlloc(laser_mail_pool);
-                    if(laser_mail){
-                        laser_mail->message_type = LASER_TOGGLE;
-                        osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
-                    }
-                }
-            }
+            controller_process_joystick(joystick_mail);
+            
             osPoolFree(joystick_mail_pool, joystick_mail);
 		} 
 

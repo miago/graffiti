@@ -32,6 +32,25 @@
 #define SERVOS_INITIAL_TILT_ANGLE 3.141592
 #define SERVOS_DISTANCE_TO_WALL 1.3
 
+typedef enum
+{
+	/* commands to the joystick module */
+	SERVOS_INIT,
+    SERVOS_GOTO_POSITION, /* kindly asks the module to move the servo 
+    to the specified position */
+
+	/* commands from the servos module to other modules */
+    SERVOS_NO_REPLY,
+    SERVOS_ERROR, /* when joystick has not been initialized */
+} servoskMessageType_t;
+
+typedef struct {
+    servoskMessageType_t message_type;
+    float x_position;
+    float y_position;
+} servosMailFormat_t;
+
+
 void servos_init(void);
 void servos_set_angles(float tilt_angle, float pan_angle);
 void servos_set_position(float x, float y);
@@ -42,5 +61,6 @@ void servos_set_tilt_angle(float new_tilt_angle);
 Angles servos_point_to_angles(Point* p) ;
 uint16_t servos_pan_angle_to_timervalue(float angle);
 uint16_t servos_tilt_angle_to_timervalue(float angle);
+void servos_process_message(servosMailFormat_t* servos_mail);
 
 #endif

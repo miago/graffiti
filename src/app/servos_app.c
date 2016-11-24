@@ -171,3 +171,17 @@ uint16_t servos_tilt_angle_to_timervalue(float angle){
 	q = SERVOS_TILT_SECOND_POINT_TIM_VALUE - m * SERVOS_TILT_SECOND_POINT_ANGLE;
 	return (uint16_t)(m*angle + q);
 }
+
+void servos_process_message(servosMailFormat_t* servos_mail)
+{
+    switch(servos_mail->message_type){
+        case SERVOS_INIT:
+            servos_init();
+            break;
+        case SERVOS_GOTO_POSITION:
+            servos_set_position(servos_mail->x_position, servos_mail->y_position);
+            break;
+        default:
+            break;
+    }
+}

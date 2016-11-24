@@ -147,6 +147,57 @@ joystickMailFormat_t* joystick_process_message(joystickMailFormat_t * joystick_m
                 joystick_level.down = JOYSTICK_ST_RELEASED;
             } 
             
+            /* RIGHT BUTTON */
+            
+            if(JOYSTICK_RE_IS(JOYSTICK_RIGHT))
+            {
+                joystick_event.right = JOYSTICK_EVT_PRESSED;
+                JOYSTICK_RE_CL(JOYSTICK_RIGHT);
+            } 
+            else if(JOYSTICK_FE_IS(JOYSTICK_RIGHT))
+            {
+                joystick_event.right = JOYSTICK_EVT_RELEASED;
+                JOYSTICK_FE_CL(JOYSTICK_RIGHT);
+            } 
+            else 
+            {
+                joystick_event.right = JOYSTICK_EVT_NONE;
+            }
+            
+            if(JOYSTICK_LV_IS(JOYSTICK_RIGHT))
+            {
+                joystick_level.right = JOYSTICK_ST_PRESSED;
+            } else 
+            {
+                joystick_level.right = JOYSTICK_ST_RELEASED;
+            } 
+            
+            /* LEFT BUTTON */
+            
+            if(JOYSTICK_RE_IS(JOYSTICK_LEFT))
+            {
+                joystick_event.left = JOYSTICK_EVT_PRESSED;
+                JOYSTICK_RE_CL(JOYSTICK_LEFT);
+            } 
+            else if(JOYSTICK_FE_IS(JOYSTICK_LEFT))
+            {
+                joystick_event.left = JOYSTICK_EVT_RELEASED;
+                JOYSTICK_FE_CL(JOYSTICK_LEFT);
+            } 
+            else 
+            {
+                joystick_event.left = JOYSTICK_EVT_NONE;
+            }
+            
+            if(JOYSTICK_LV_IS(JOYSTICK_LEFT))
+            {
+                joystick_level.left = JOYSTICK_ST_PRESSED;
+            } else 
+            {
+                joystick_level.left = JOYSTICK_ST_RELEASED;
+            } 
+           
+            
             
             
             joystick_mail->joystick_event = &joystick_event;
