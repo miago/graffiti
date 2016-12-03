@@ -75,11 +75,7 @@ void test_servos_set_servos_tilt_angle(void){
 	the canvas has a width of 2 and a heigth of 1.
 
 	Point 0,0 is in the middle of the canvas
-
-
-
 	
-
 	Points -1 respectively +1 in the x axis are at an angle of 45 degrees
 	Point -0.5 of the y coordinate is at an angle of 0 degree (or maybe 
 	180, depending on where the angle of the servo starts).

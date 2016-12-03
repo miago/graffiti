@@ -14,11 +14,14 @@
 
 /* Includes ------------------------------------------------------------------*/	
 #include "stm32f10x.h"
-//#include "main.h"
+
 #include "glcd.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
+
+
 
 /* Private defines------------------------------------------------------------*/
 /* Prototypes ------------------------------------------------------------------*/
@@ -26,6 +29,7 @@ void display_init(void);
 void glcd_spi_write(uint8_t c);
 void glcd_reset(void);
 void Display(uint32_t TimeVar, float TempVar, float axVar, float ayVar, float azVar);
+
 
 #endif /*__DISPLAY_H */
 

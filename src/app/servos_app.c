@@ -192,8 +192,11 @@ servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail)
  
         case SERVOS_GOTO_POSITION:
             servos_set_position(servos_mail->x_position, servos_mail->y_position);
-            break;
+            servos_mail->message_type = SERVOS_OK;
+            return servos_mail;
+
         default:
-            break;
+            servos_mail->message_type = SERVOS_ERROR;
+            return servos_mail;
     }
 }

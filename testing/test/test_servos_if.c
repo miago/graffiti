@@ -40,3 +40,16 @@ void test_servos_without_init(void){
 
 	TEST_ASSERT_EQUAL(SERVOS_ERROR, servos_return_message->message_type);
 }
+
+void test_servos_goto_position(void){
+	servosMailFormat_t servos_message;
+	servosMailFormat_t* servos_return_message;
+
+	servos_message.message_type = SERVOS_INIT;
+	servos_process_message(&servos_message);
+
+	servos_message.message_type = SERVOS_GOTO_POSITION;
+	servos_return_message = servos_process_message(&servos_message);
+
+	TEST_ASSERT_EQUAL(SERVOS_OK, servos_return_message->message_type);
+}
