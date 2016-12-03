@@ -37,9 +37,14 @@ float servos_tilt_angle;
 float servos_pan_angle;
 
 /**
-* @brief Storest the distance to the wall
+* @brief Stores the distance to the wall
 */
 float servos_distance_to_wall;
+
+/** 
+* @brief This flag is 1 when the module is initialized
+*/
+uint8_t servos_initialized;
 
 /**
 * Initializes the servos unit
@@ -52,6 +57,7 @@ void servos_init(void) {
 	
     servos_init_hal();
 
+    servos_initialized = 1;
 }
 
 /**
@@ -172,12 +178,18 @@ uint16_t servos_tilt_angle_to_timervalue(float angle){
 	return (uint16_t)(m*angle + q);
 }
 
-void servos_process_message(servosMailFormat_t* servos_mail)
+servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail)
 {
+	if( (servos_initialized == 0) && (servos_mail->message_type!=SERVOS_INIT)){
+		servos_mail->message_type = SERVOS_ERROR;
+		return servos_mail;
+	}
     switch(servos_mail->message_type){
         case SERVOS_INIT:
             servos_init();
-            break;
+            servos_mail->message_type = SERVOS_OK;
+            return servos_mail;
+ 
         case SERVOS_GOTO_POSITION:
             servos_set_position(servos_mail->x_position, servos_mail->y_position);
             break;

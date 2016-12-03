@@ -28,10 +28,13 @@
 #include "laser_task.h"
 #include <stdint.h>
 
+uint8_t initialized = 0;
+
 void laser_init(void)
 {
 	laser_init_hal();
 	laser_set_off();
+    initialized = 1;
 }
 
 void laser_set_on(void)
@@ -49,20 +52,43 @@ laser_status_t laser_get_status(void){
 	return laser_get_status_hal();
 }
 
-void laser_process_message(laserMailFormat_t* mail)
+laserMailFormat_t* laser_process_message(laserMailFormat_t* mail)
 {
     laser_status_t laser_status;
+    if((mail->message_type != LASER_INIT) && (initialized == 0)){
+        mail->message_type = LASER_ERROR;
+        return mail;
+    }
+
     switch(mail->message_type){
         case LASER_INIT:
             laser_init();
-            break;
+            mail->message_type = LASER_OK;
+            mail->laser_state = 0;
+            return mail;
+
         case LASER_SET_STATUS:
             if(mail->laser_state == 1) {
                 laser_set_on();
             } else {
                 laser_set_off();
             }
-            break;
+
+            mail->message_type = LASER_OK;
+            return mail;
+
+        case LASER_GET_STATUS:
+            mail->message_type = LASER_STATUS;
+
+            laser_status = laser_get_status();
+            if(laser_status == on) {
+                mail->laser_state = 1;
+            } else {
+                mail->laser_state = 0;
+            }
+
+            return mail;
+
         case LASER_TOGGLE:
             laser_status = laser_get_status();
             if(laser_status == on) {
@@ -70,7 +96,11 @@ void laser_process_message(laserMailFormat_t* mail)
             } else {
                 laser_set_on();
             }
+            mail->message_type = LASER_OK;
+            return mail;
         default:
             break;
     }
+    mail->message_type = LASER_ERROR;
+    return mail;
 }

@@ -35,17 +35,17 @@
 typedef enum
 {
 	/* commands to the joystick module */
-	SERVOS_INIT,
-    SERVOS_GOTO_POSITION, /* kindly asks the module to move the servo 
+	SERVOS_INIT = 0,
+    SERVOS_GOTO_POSITION = 1, /* kindly asks the module to move the servo 
     to the specified position */
 
 	/* commands from the servos module to other modules */
-    SERVOS_NO_REPLY,
-    SERVOS_ERROR, /* when joystick has not been initialized */
-} servoskMessageType_t;
+    SERVOS_OK = 10,
+    SERVOS_ERROR = 11, /* when joystick has not been initialized */
+} servosMessageType_t;
 
 typedef struct {
-    servoskMessageType_t message_type;
+    servosMessageType_t message_type;
     float x_position;
     float y_position;
 } servosMailFormat_t;
@@ -61,6 +61,6 @@ void servos_set_tilt_angle(float new_tilt_angle);
 Angles servos_point_to_angles(Point* p) ;
 uint16_t servos_pan_angle_to_timervalue(float angle);
 uint16_t servos_tilt_angle_to_timervalue(float angle);
-void servos_process_message(servosMailFormat_t* servos_mail);
+servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail);
 
 #endif

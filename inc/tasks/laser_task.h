@@ -33,12 +33,15 @@
 
 typedef struct 
 {
-    osThreadId tid_Laser;           //!< Handle to the current thread
-} laserDataBlock_t;                 //!< Thread Data block defined
+    osThreadId tid_Laser;
+} laserDataBlock_t;
 
 
 /* function prototypes */ 
+
+
 void Laser_Thread(void const *argument);
+
 int Laser_Thread_Init(laserDataBlock_t * laserDataBlock);
 
 #endif

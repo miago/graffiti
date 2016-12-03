@@ -13,6 +13,7 @@
 extern float servos_tilt_angle;
 extern float servos_pan_angle;
 extern float servos_distance_to_wall;
+extern uint8_t servos_initialized;
 
 void setUp(void){
   /* This is run before EACH TEST */
@@ -28,6 +29,8 @@ void test_servos_init(void){
 	/* 
 		TEST_ASSERT_FLOAT_WITHIN(delta, expected, actual) 
 	*/
+
+	TEST_ASSERT_EQUAL(1, servos_initialized);
 	
 	TEST_ASSERT_FLOAT_WITHIN(0.001, SERVOS_INITIAL_PAN_ANGLE, servos_pan_angle);
 	TEST_ASSERT_FLOAT_WITHIN(0.001, SERVOS_INITIAL_TILT_ANGLE, servos_tilt_angle);

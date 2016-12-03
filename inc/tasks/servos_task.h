@@ -33,8 +33,8 @@
 
 typedef struct 
 {
-    osThreadId tid_Servos;           //!< Handle to the current thread
-} servosDataBlock_t;                 //!< Thread Data block defined
+    osThreadId tid_Servos;
+} servosDataBlock_t;
 
 
 /* function prototypes */ 

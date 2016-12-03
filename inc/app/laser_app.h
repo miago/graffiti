@@ -37,18 +37,18 @@
 typedef enum
 {
 	/* Messages which can be sent to the laser */
-	LASER_INIT, /* Reuqest initialisation of laser */
-	LASER_GET_STATUS, /* Request status of the laser */
-	LASER_SET_STATUS, /* Request that laser is set to 
+	LASER_INIT = 2, /* Reuqest initialisation of laser */
+	LASER_GET_STATUS = 3, /* Request status of the laser */
+	LASER_SET_STATUS = 4, /* Request that laser is set to 
 	the provided value */
-	LASER_TOGGLE, /* Request that the laser status 
+	LASER_TOGGLE = 5, /* Request that the laser status 
 	is toggled */
 
 	/* Responses which the laser can give */
-	LASER_OK, /* This is the default response when the message
+	LASER_OK = 10, /* This is the default response when the message
 	has been executed correctly */
-	LASER_ERROR, /* This is the response given when an error occured */
-	LASER_STATUS /* With this messsage the status of the led
+	LASER_ERROR = 11, /* This is the response given when an error occured */
+	LASER_STATUS = 12 /* With this messsage the status of the laser
 	is provided */
 } laserMessageType_t;
 
@@ -61,7 +61,7 @@ typedef struct
 void laser_init(void);
 void laser_set_on(void);
 void laser_set_off(void);
-void laser_process_message(laserMailFormat_t* mail);
+laserMailFormat_t* laser_process_message(laserMailFormat_t* mail);
 
 laser_status_t laser_get_status(void);
 
