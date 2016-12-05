@@ -41,6 +41,17 @@ typedef enum {
 	FROM_TEXT
 } drawingMode_t;
 
+typedef enum
+{
+	CONTROLLER_INIT = 0,
+    CONTROLLER_DRAW_TEXT = 1,
+    CONTROLLER_DRAW_MANUALLY = 2
+} controllerMessageType_t;
+
+typedef struct {
+    controllerMessageType_t message_type;
+} controllerMessageFormat_t;
+
 void controller_init(void);
 void controller_process_laser(laserMailFormat_t * laser_mail);
 void controller_process_joystick(joystickMailFormat_t * joystick_mail);

@@ -27,7 +27,10 @@
 #include "joystick_app.h"
 #include "laser_app.h"
 #include "servos_app.h"
+#include "globals.h"
+#include "text_generator.h"
 #include <cmsis_os.h>
+
 
 /** 
 * @brief Increment step for manual drawing
@@ -62,6 +65,8 @@ float laser_position_y;
 
 uint8_t current_menu_element_id;
 
+char text_to_display[6] = "Mirco\n";
+
 /**
 * @brief Initializes the controller 
 **/
@@ -74,6 +79,22 @@ void controller_init(void)
     
     laser_position_x = 0;
     laser_position_y = 0;
+
+
+}
+
+/** 
+* @brief process general messages, coming from main() probably
+*/
+void controller_process_message(controllerMessageFormat_t* controller_message){
+    switch(controller_message->message_type){
+        case CONTROLLER_INIT:
+            controller_init();
+            return;
+        case CONTROLLER_DRAW_TEXT:
+            controller_state = DRAWING;
+            controller_drawing_mode = FROM_TEXT;
+    }
 }
 
 /**
@@ -192,4 +213,61 @@ void controller_decrement_y_position(void){
     {
         laser_position_y = -0.5;
     }
+}
+
+
+/**
+* @brief function which draws one pixel at a time,
+* it begins at (0,0) (bottom left) of the first character. 
+* The next pixel is the one with the y coordinate incremented by one
+* with the same x coordinate, which means that the next pixel is (1,0).
+* When the maximum is reached (7 for example), the x coodinate 
+* is incremented by 1 and the y coordinate is reset to 0.
+*/
+
+void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_pixel) {
+    servosMailFormat_t* servosMessage;
+    laserMailFormat_t* laserMessage;
+    float x_coordinate;
+    float y_coordinate;
+    uint16_t absolute_pixel_x;
+    uint16_t absolute_pixel_y;
+    uint8_t pixel_state;
+
+    absolute_pixel_x = character_index*FONT_WIDTH + x_pixel;
+    absolute_pixel_y = y_pixel;
+    /* align at 0,0 (bottom left) */
+    /* need the coordinate of the next pixel */
+    text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
+
+    /* send command to servo */
+    servosMessage = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
+    servosMessage->message_type = SERVOS_GOTO_POSITION;
+    servosMessage->x_position = x_coordinate;
+    servosMessage->y_position = y_coordinate;
+
+    osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+    osDelay(50);
+    /* TODO: Free memory */
+
+    /* send command to laser */
+    pixel_state = text_generator_get_pixel(x_pixel, y_pixel, text_to_display[character_index]);
+    if(1 == pixel_state){
+        laserMessage = (servosMailFormat_t *)osPoolAlloc(laser_mail_pool);
+        laserMessage->message_type = LASER_SET_STATUS;
+        laserMessage->laser_state = 1;
+        osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
+        osDelay(50);
+        /* TODO: Free memory */
+        laserMessage = (servosMailFormat_t *)osPoolAlloc(laser_mail_pool);
+        laserMessage->message_type = LASER_SET_STATUS;
+        laserMessage->laser_state = 0;
+        osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
+        osDelay(50);
+        /* TODO: Free memory */
+    }
+}
+
+uint8_t controller_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx){
+    
 }

@@ -123,5 +123,8 @@ osPoolId osPoolCreate (const osPoolDef_t *pool_def);
 osEvent osMessageGet (osMessageQId queue_id, uint32_t millisec);
 osStatus osPoolFree (osPoolId pool_id, void *block);
 osStatus osThreadYield (void);
+osStatus osDelay (uint32_t millisec);
+void *osPoolAlloc (osPoolId pool_id);
+osStatus osMessagePut (osMessageQId queue_id, uint32_t info, uint32_t millisec);
 
 #endif

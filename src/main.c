@@ -167,7 +167,8 @@ int main(void)
     servos_mail = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
     servos_mail->message_type = SERVOS_INIT;
     osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
-    
+
+    // send command to controller to begin writing the test
 
 	Init_Timers();
 

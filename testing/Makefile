@@ -47,6 +47,7 @@ CFLAGS_99 += -std=c99
 CFLAGS +=-std=c89
 
 LASER_BASE=laser
+CONTROLLER_BASE=controller
 LASER_IF_BASE=laser_if
 SERVOS_BASE=servos
 SERVOS_IF_BASE=servos_if
@@ -58,6 +59,7 @@ STM_LIB_BASE=stm
 OS_LIB_BASE=os
 DISPLAY_LIB_BASE=display
 
+CONTROLLER = $(CONTROLLER_BASE)$(TARGET_EXTENSION)
 LASER = $(LASER_BASE)$(TARGET_EXTENSION)
 LASER_IF = $(LASER_IF_BASE)$(TARGET_EXTENSION)
 SERVOS = $(SERVOS_BASE)$(TARGET_EXTENSION)
@@ -83,10 +85,10 @@ LASER_IF_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/laser_app.c ../src/
 SERVOS_IF_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/servos_app.c ../src/hal/servos_hal.c -L./ -l$(STM_LIB_BASE) test/test_runners/test_servos_if_runner.c test/test_servos_if.c
 
 DISPLAY_IF_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/display_app.c -L./ -l$(DISPLAY_LIB_BASE) test/test_runners/test_display_if_runner.c test/test_display_if.c
-
+CONTROLLER_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/controller_app.c ../src/alia/text_generator.c -L./ -l$(OS_LIB_BASE) test/test_runners/test_controller_runner.c test/test_controller.c
 TEXT_GENERATOR_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/alia/text_generator.c test/test_runners/test_text_generator_runner.c test/test_text_generator.c
 INC_DIRS=-I../inc/app -I../inc/hal -I../inc/tasks -I$(UNITY_ROOT)/unity_src -I./inc
-
+INC_DIRS_CONTROLLER=-I../inc/alia -I../glcd/fonts
 INC_DIRS_TEXT_GENERATOR=-I../glcd/fonts -I../inc/alia
 
 SYMBOLS=-DTEST
@@ -145,12 +147,20 @@ display_if: libdisplay.a
 	./$(DISPLAY_IF)
 
 text_generator: 
-	#generate test runner
+	# generate test runner
 	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_text_generator.c test/test_runners/test_text_generator_runner.c
 	# compile
 	$(C_COMPILER) $(CFLAGS_99) $(INC_DIRS) -DTESTING $(INC_DIRS_TEXT_GENERATOR) $(SYMBOLS) $(TEXT_GENERATOR_TEST_SRC) -o $(TEXT_GENERATOR)
 	# execute
 	./$(TEXT_GENERATOR)
+
+controller: libos.a
+	# generate test runner
+	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_controller.c test/test_runners/test_controller_runner.c
+	# compile
+	$(C_COMPILER) $(CFLAGS_99) $(INC_DIRS) -DTESTING $(INC_DIRS_CONTROLLER) $(SYMBOLS) $(CONTROLLER_TEST_SRC)  -o $(CONTROLLER)
+	# execute
+	./$(CONTROLLER)
 	
 libstm.a:
 	# compile stmtest with -c flag: needed because we don't have a main function
@@ -188,9 +198,4 @@ libstmtest: libstm
 clean:
 	$(CLEANUP) *$(TARGET_EXTENSION)
 	$(CLEANUP) *$(LIB_EXTENSION)
-	$(CLEANUP) test/test_runners/test_libstm_runner.c
-	$(CLEANUP) test/test_runners/test_stmtestlib_runner.c
-	$(CLEANUP) test/test_runners/test_laser_runner.c
-	$(CLEANUP) test/test_runners/test_laser_if_runner.c
-	$(CLEANUP) test/test_runners/test_joystick_runner.c
-	$(CLEANUP) test/test_runners/test_servos_runner.c
+	$(CLEANUP) test/test_runners/*.c
