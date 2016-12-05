@@ -50,9 +50,8 @@ extern osMessageQId laser_mq;
 extern osPoolId laser_mail_pool;
 /**
 * Initialized the Joystick Thread
-* @param joystickDataBlock
+* @param controllerDataBlock
 */
-
 int Controller_Thread_Init(controllerDataBlock_t * controllerDataBlock)
 {
     joystick_mq_in = osMessageCreate(osMessageQ(joystick_mq_in),NULL);

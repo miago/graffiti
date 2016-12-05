@@ -4,7 +4,7 @@
 #include "unity.h"
 #include <stdint.h>
 
-extern uint8_t initialized;
+extern uint8_t laser_initialized;
 
 /* sometimes you may want to get at local data in a module.
  * for example: If you plan to pass by reference, this could be useful
@@ -14,12 +14,12 @@ void setUp(void)
 {
   /* This is run before EACH TEST */
 	/* somehow this flag is not reset */
-	initialized = 0;
+	laser_initialized = 0;
 }
 
 void tearDown(void)
 {
-	initialized = 0;
+	laser_initialized = 0;
 }
 
 void test_laser_init(void){

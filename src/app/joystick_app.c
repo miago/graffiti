@@ -27,9 +27,17 @@
 #include "joystick_app.h"
 #include <stdint.h>
 
-
+/**
+* @brief Contains the current state of the joystick 
+**/
 uint8_t joystick_state = 0x00;
+/**
+* @brief Contains the current rising state of the joystick
+**/
 uint8_t joystick_rising = 0x00;
+/**
+* @brief Contains the current falling state of the joystick
+**/
 uint8_t joystick_falling = 0x00;
 
 joystickMailFormat_t joystick_in_message;

@@ -3,8 +3,16 @@
 #include "display_app.h"
 #include "display.h"
 
+/**
+* @brief Flag containing the initialisation state of the display module 
+* 0 when uninitialized, 1 when initialized 
+**/
 uint8_t display_initialized = 0;
 
+
+/**
+* @brief Processes a message
+**/
 displayMessageFormat_t* display_process_message(displayMessageFormat_t* display_message){
     if((display_message->message_type != DISPLAY_INIT) && (display_initialized == 0)){
         display_message->message_type = DISPLAY_ERROR;

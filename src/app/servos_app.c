@@ -47,9 +47,8 @@ float servos_distance_to_wall;
 uint8_t servos_initialized;
 
 /**
-* Initializes the servos unit
+* @brief Initializes the servos unit
 */
-
 void servos_init(void) {
 	servos_pan_angle = SERVOS_INITIAL_PAN_ANGLE;
 	servos_tilt_angle = SERVOS_INITIAL_TILT_ANGLE;
@@ -61,28 +60,25 @@ void servos_init(void) {
 }
 
 /**
-* Function to get the get the pan angle at the application level
+* @brief Function to get the get the pan angle at the application level
 * @retval provides the current pan angle
 */
-
 float servos_get_pan_angle(void){
 	return servos_pan_angle;
 }
 
 /**
-* Function to get the get the tilt angle at the application level
+* @brief Function to get the get the tilt angle at the application level
 * @retval provides the current tilt angle
 */
-
 float servos_get_tilt_angle(void){
 	return servos_tilt_angle;
 }
 
 /**
-* Function to set the tilt angle at the application level
-* @param new_tilt_angle desired angle
+* @brief Function to set the pan angle at the application level
+* @param new_pan_angle desired angle
 */
-
 void servos_set_pan_angle(float new_pan_angle){
     uint16_t tim_value = 0;
 	servos_pan_angle = new_pan_angle;
@@ -91,7 +87,7 @@ void servos_set_pan_angle(float new_pan_angle){
 }
 
 /**
-* Function to set the tilt angle at the application level
+* @brief Function to set the tilt angle at the application level
 * @param new_tilt_angle desired angle
 */
 
@@ -103,7 +99,7 @@ void servos_set_tilt_angle(float new_tilt_angle){
 }
 
 /**
-* Set the servos such that the laser points to the desired point
+* @brief Set the servos such that the laser points to the desired point
 * @param x x position of the beam
 * @param y y posotion of the beam
 */
@@ -119,7 +115,7 @@ void servos_set_position(float x, float y){
 }
 
 /**	
-* Translates a point on the wall, which go from -1 to +1 in x
+* @brief Translates a point on the wall, which go from -1 to +1 in x
 * and from -0.5 to +0.5 in y, to the angles of the servos
 * @param p point on the wall
 * @retval angles angles of the servos
@@ -138,12 +134,11 @@ Angles servos_point_to_angles(Point* p) {
 }
 
 /**
-* This function calculates the needed t_on of the timer/PWM to set the 
+* @brief This function calculates the needed t_on of the timer/PWM to set the 
 * servo to the desired pan angle
 * @param angle desired angle
 * @retval value value for the output compare
 */
-
 uint16_t servos_pan_angle_to_timervalue(float angle){
 	/* 
 		y = mx + q
@@ -159,12 +154,11 @@ uint16_t servos_pan_angle_to_timervalue(float angle){
 }
 
 /**
-* This function calculates the needed t_on of the timer/PWM to set the 
+* @brief This function calculates the needed t_on of the timer/PWM to set the 
 * servo to the desired tilt angle
 * @param angle desired angle
 * @retval value value for the output compare
 */
-
 uint16_t servos_tilt_angle_to_timervalue(float angle){
 	/* 
 		y = mx + q
@@ -179,6 +173,9 @@ uint16_t servos_tilt_angle_to_timervalue(float angle){
 	return (uint16_t)(m*angle + q);
 }
 
+/**
+* @brief Function to process the incoming messages
+**/
 servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail)
 {
 	if( (servos_initialized == 0) && (servos_mail->message_type!=SERVOS_INIT)){

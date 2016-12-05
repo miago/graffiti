@@ -11,11 +11,6 @@
 *
 * <h2><center>smile from time to time</center></h2>
 *
-* @section sHw Hardware used
-*
-* Nucleo64STM32F103
-*
-* @section sIde Development tool used
 *
 * uVision MDK-ARM 5.21a or later
 */
@@ -25,7 +20,7 @@
  *---------------------------------------------------------------------------*/
 
 #define osObjectsPublic		// define objects in main module
-#include "osObjects.h"		// RTOS object definitions
+#include "osObjects.h"		
 
 #include "stm32f10x.h"
 #include "myAppData.h"
@@ -35,102 +30,75 @@
 #include "servos_task.h"
 #include "display_task.h"
 #include <stdio.h>
+#include "alia.h"
 
 extern void Init_Timers(void);
 
 extern int Init_ThreadA(threadData_t *);
 
-
+/**
+* @brief data of the LED thread
+**/
 threadData_t threadData[3];
 
+/**
+* @brief data of the Controller
+**/
 controllerDataBlock_t controllerData;
 
+/**
+* @brief data of the Laser Task
+**/
 laserDataBlock_t laserData;
 extern osPoolId laser_mail_pool;
+/**
+* @brief pointer to a message for the laser task
+**/
 laserMailFormat_t* laser_mail;
 extern osMessageQId laser_mq;
 
+/**
+* @brief data of the Joystick Task
+**/
 joystickDataBlock_t joystickData;
 extern osPoolId joystick_mail_pool;
+/**
+* @brief pointer to a message for the joystick task
+**/
 joystickMailFormat_t* joystick_mail;
 extern osMessageQId joystick_mq;
 
+/**
+* @brief data of the Servos Task
+**/
 servosDataBlock_t servosData;
 extern osPoolId servos_mail_pool;
+/**
+* @brief pointer to a message for the servos task
+**/
 servosMailFormat_t* servos_mail;
 extern osMessageQId servos_mq;
 
+/**
+* @brief data of the Display Task
+**/
 displayDataBlock_t displayData;
 extern osPoolId display_message_pool;
+/**
+* @brief pointer to a message for the display task
+**/
 displayMessageFormat_t* display_message;
 extern osMessageQId display_mq;
-char welcome_message[10] = "Welcome\n";
-
-char text[20];
-
-void RCC_Configuration(void)
-{
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
-}
-
-void GPIO_Configuration(void)
-{
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-	/* Joystick center button input for button reading */
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-	//$TASK LED on Nucleo
-	/* 
-	   red D5 PB4
-	   green D9 PC7
-	   blue D8 PA9
-	 */
-	// Blue LED on PA9, Arduino D8
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;
-	GPIO_Init(GPIOA, &GPIO_InitStructure);
-
-	// Green LED on PC7, Arduino D9
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-	GPIO_Init(GPIOC, &GPIO_InitStructure);
-
-	// Red LED on PB4
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_4;
-	GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-	// Blue LED pin PB4 JTAG  JNTRST pin must be Alternate Remap to be a GPIO
-	GPIO_PinRemapConfig(GPIO_Remap_SWJ_NoJTRST, ENABLE);
-
-	// Active low elements, so switch them on!
-	GPIO_SetBits(GPIOA, GPIO_Pin_9);
-	GPIO_SetBits(GPIOC, GPIO_Pin_7);
-	GPIO_SetBits(GPIOB, GPIO_Pin_4);
-
-}
 
 /**
-* Initialisation code 
-*/
-void initialisation(void)
-{
-
-	SystemCoreClockUpdate();
-
-	RCC_Configuration();
-	GPIO_Configuration();
-}
+* @brief Text of the welcome message on the display
+**/
+char welcome_message[10] = "Welcome\n";
 
 /*
  * main: initialize and start the system
  */
+
 int main(void)
 {
 	initialisation();

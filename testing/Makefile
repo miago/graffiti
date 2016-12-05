@@ -94,7 +94,7 @@ SYMBOLS=-DTEST
 all: clean default
 
 # require that the stmlib is built
-default: laser servos joystick laser_if servos_if
+default: laser servos joystick laser_if servos_if display_if text_generator
 
 joystick: libstm.a
 	# generate test runner

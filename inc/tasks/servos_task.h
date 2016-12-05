@@ -31,6 +31,9 @@
 #include "servos_app.h"
 #include "servos_hal.h"
 
+/**
+* @brief data block of the servo thread
+ */
 typedef struct 
 {
     osThreadId tid_Servos;

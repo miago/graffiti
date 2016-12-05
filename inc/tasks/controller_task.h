@@ -29,6 +29,9 @@
 #include <stdint.h>
 #include <cmsis_os.h>
 
+/**
+* @brief contains the data needed for the thread
+**/
 typedef struct 
 {
     osThreadId tid_Controller;           //!< Handle to the current thread

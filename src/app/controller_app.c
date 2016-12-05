@@ -29,9 +29,19 @@
 #include "servos_app.h"
 #include <cmsis_os.h>
 
+/** 
+* @brief Increment step for manual drawing
+*/
 #define INCREMENT_STEP 0.02
 
+/**
+* @brief Contains the state of the controller
+**/
 controllerState_t controller_state;
+
+/**
+* @brief Contains the drawing status of the controller
+**/
 drawingMode_t controller_drawing_mode;
 
 extern osMessageQId laser_mq;
@@ -40,11 +50,21 @@ extern osPoolId laser_mail_pool;
 extern osMessageQId servos_mq;
 extern osPoolId servos_mail_pool;
 
+/** 
+* @brief Contains the current x position of the laser/servos
+**/
 float laser_position_x;
+
+/**
+* @brief Contains the current y position of the laser/servos
+**/
 float laser_position_y;
 
 uint8_t current_menu_element_id;
 
+/**
+* @brief Initializes the controller 
+**/
 void controller_init(void)
 {
 	controller_state = INITIALIZED;
@@ -56,11 +76,17 @@ void controller_init(void)
     laser_position_y = 0;
 }
 
+/**
+* @brief Processes a message coming from the Laser module
+**/
 void controller_process_laser(laserMailFormat_t * laser_mail) 
 {
 
 }
 
+/**
+* @brief Processes a message coming from the Joystick module
+**/
 void controller_process_joystick(joystickMailFormat_t * joystick_mail) 
 {
     laserMailFormat_t * laser_mail;
@@ -124,6 +150,9 @@ void controller_process_joystick(joystickMailFormat_t * joystick_mail)
 	}
 }
 
+/**
+* @brief Increments the position by one step in x direction 
+**/
 void controller_increment_x_position(void){
     laser_position_x += INCREMENT_STEP;
     if(laser_position_x > 1)
@@ -132,6 +161,9 @@ void controller_increment_x_position(void){
     }
 }
 
+/**
+* @brief Decrements the position by one step in x direction 
+**/
 void controller_decrement_x_position(void){
     laser_position_x -= INCREMENT_STEP;
     if(laser_position_x < -1)
@@ -140,6 +172,9 @@ void controller_decrement_x_position(void){
     }
 }
 
+/**
+* @brief Increments the position by one step in y direction 
+**/
 void controller_increment_y_position(void){
     laser_position_y += INCREMENT_STEP;
     if(laser_position_y > 0.5)
@@ -148,6 +183,9 @@ void controller_increment_y_position(void){
     }
 }
 
+/**
+* @brief Decrements the position by one step in y direction 
+**/
 void controller_decrement_y_position(void){
     laser_position_y -= INCREMENT_STEP;
     if(laser_position_y < -0.5)

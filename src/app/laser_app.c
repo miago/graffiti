@@ -28,34 +28,53 @@
 #include "laser_task.h"
 #include <stdint.h>
 
-uint8_t initialized = 0;
+/**
+* @brief Contains the initialisation state of the Laser Module
+**/
+uint8_t laser_initialized = 0;
 
+/**
+* @brief Initialization routine of the laser Module
+**/
 void laser_init(void)
 {
 	laser_init_hal();
 	laser_set_off();
-    initialized = 1;
+    laser_initialized = 1;
 }
 
+/**
+* @brief Switches the laser on
+**/
 void laser_set_on(void)
 {
 	laser_status_t ls = on;
 	laser_set_status_hal(ls);
 }
 
+/**
+* @brief Switches the laser off
+**/
 void laser_set_off(void){
 	laser_status_t ls = off;
 	laser_set_status_hal(ls);
 }
 
+/**
+* @brief Returns the current laser status
+**/
 laser_status_t laser_get_status(void){
 	return laser_get_status_hal();
 }
 
+
+/**
+* @brief Message process routine of the laser module
+**/
 laserMailFormat_t* laser_process_message(laserMailFormat_t* mail)
 {
     laser_status_t laser_status;
-    if((mail->message_type != LASER_INIT) && (initialized == 0)){
+    if((mail->message_type != LASER_INIT) && (laser_initialized == 0)){
         mail->message_type = LASER_ERROR;
         return mail;
     }
