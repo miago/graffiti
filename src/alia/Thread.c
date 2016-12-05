@@ -14,7 +14,6 @@ osThreadDef(ThreadA, osPriorityNormal, 1, 0);	// thread object
 
 int Init_ThreadA(threadData_t * dataBlock)
 {
-
 	tid_Thread = osThreadCreate(osThread(ThreadA), dataBlock);
 	dataBlock->tid_Thread = tid_Thread;
 	if (!tid_Thread)

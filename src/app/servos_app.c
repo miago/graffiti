@@ -126,10 +126,11 @@ void servos_set_position(float x, float y){
 */
 
 Angles servos_point_to_angles(Point* p) {
+
+	/* TODO: take canvas size from somewhere */
 	Angles ang;
 	
 	ang.tilt = atan2(p->y + 0.5, 1);
-	
 	
 	ang.pan = atan2(p->x, 1);
 	

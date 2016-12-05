@@ -28,8 +28,7 @@ endif
 UNITY_ROOT=./
 C_COMPILER=gcc
 
-CFLAGS=-std=c89
-CFLAGS += -Wall
+CFLAGS = -Wall
 CFLAGS += -Wextra
 #CFLAGS += -Werror 
 CFLAGS += -Wpointer-arith
@@ -43,6 +42,9 @@ CFLAGS += -Wno-unknown-pragmas
 CFLAGS += -Wstrict-prototypes
 #CFLAGS += -Wundef
 CFLAGS += -Wold-style-definition
+CFLAGS_99 = $(CFLAGS)
+CFLAGS_99 += -std=c99
+CFLAGS +=-std=c89
 
 LASER_BASE=laser
 LASER_IF_BASE=laser_if
@@ -50,6 +52,7 @@ SERVOS_BASE=servos
 SERVOS_IF_BASE=servos_if
 DISPLAY_IF_BASE=display_if
 JOYSTICK_BASE=joystick
+TEXT_GENERATOR_BASE=text_generator
 TARGET_STM=stmtest
 STM_LIB_BASE=stm
 OS_LIB_BASE=os
@@ -61,6 +64,7 @@ SERVOS = $(SERVOS_BASE)$(TARGET_EXTENSION)
 SERVOS_IF = $(SERVOS_IF_BASE)$(TARGET_EXTENSION)
 DISPLAY_IF = $(DISPLAY_IF_BASE)$(TARGET_EXTENSION)
 JOYSTICK = $(JOYSTICK_BASE)$(TARGET_EXTENSION)
+TEXT_GENERATOR = $(TEXT_GENERATOR_BASE)$(TARGET_EXTENSION)
 STM_TEST_TARGET = $(TARGET_STM)$(TARGET_EXTENSION)
 STM_LIB = lib$(STM_LIB_BASE)$(LIB_EXTENSION)
 OS_LIB = lib$(OS_LIB_BASE)$(LIB_EXTENSION)
@@ -80,7 +84,10 @@ SERVOS_IF_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/servos_app.c ../sr
 
 DISPLAY_IF_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/app/display_app.c -L./ -l$(DISPLAY_LIB_BASE) test/test_runners/test_display_if_runner.c test/test_display_if.c
 
+TEXT_GENERATOR_TEST_SRC=$(UNITY_ROOT)/unity_src/unity.c ../src/alia/text_generator.c test/test_runners/test_text_generator_runner.c test/test_text_generator.c
 INC_DIRS=-I../inc/app -I../inc/hal -I../inc/tasks -I$(UNITY_ROOT)/unity_src -I./inc
+
+INC_DIRS_TEXT_GENERATOR=-I../glcd/fonts -I../inc/alia
 
 SYMBOLS=-DTEST
 
@@ -136,6 +143,14 @@ display_if: libdisplay.a
 	$(C_COMPILER) $(CFLAGS) $(INC_DIRS) $(SYMBOLS) $(DISPLAY_IF_TEST_SRC) -o $(DISPLAY_IF)
 	# execute
 	./$(DISPLAY_IF)
+
+text_generator: 
+	#generate test runner
+	ruby $(UNITY_ROOT)/auto/generate_test_runner.rb test/test_text_generator.c test/test_runners/test_text_generator_runner.c
+	# compile
+	$(C_COMPILER) $(CFLAGS_99) $(INC_DIRS) -DTESTING $(INC_DIRS_TEXT_GENERATOR) $(SYMBOLS) $(TEXT_GENERATOR_TEST_SRC) -o $(TEXT_GENERATOR)
+	# execute
+	./$(TEXT_GENERATOR)
 	
 libstm.a:
 	# compile stmtest with -c flag: needed because we don't have a main function
@@ -171,16 +186,8 @@ libstmtest: libstm
 	./$(STM_TEST_TARGET)
 
 clean:
-	$(CLEANUP) $(LASER)	
-	$(CLEANUP) $(LASER_IF)
-	$(CLEANUP) $(SERVOS)
-	$(CLEANUP) $(SERVOS_IF)
-	$(CLEANUP) $(JOYSTICK)
-	$(CLEANUP) $(STM_LIB)
-	$(CLEANUP) $(STM_TEST_TARGET)
-	$(CLEANUP) $(OS_LIB)
-	$(CLEANUP) $(DISPLAY_LIB)
-	$(CLEANUP) lib$(STM_LIB_BASE)$(TARGET_EXTENSION)
+	$(CLEANUP) *$(TARGET_EXTENSION)
+	$(CLEANUP) *$(LIB_EXTENSION)
 	$(CLEANUP) test/test_runners/test_libstm_runner.c
 	$(CLEANUP) test/test_runners/test_stmtestlib_runner.c
 	$(CLEANUP) test/test_runners/test_laser_runner.c

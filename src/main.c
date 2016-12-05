@@ -33,6 +33,7 @@
 #include "joystick_task.h"
 #include "controller_task.h"
 #include "servos_task.h"
+#include "display_task.h"
 #include <stdio.h>
 
 extern void Init_Timers(void);
@@ -59,6 +60,11 @@ extern osPoolId servos_mail_pool;
 servosMailFormat_t* servos_mail;
 extern osMessageQId servos_mq;
 
+displayDataBlock_t displayData;
+extern osPoolId display_message_pool;
+displayMessageFormat_t* display_message;
+extern osMessageQId display_mq;
+char welcome_message[10] = "Welcome\n";
 
 char text[20];
 
@@ -169,6 +175,22 @@ int main(void)
     laser_mail->message_type = LASER_SET_STATUS;
     laser_mail->laser_state = 1;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
+    
+    
+    // init display
+    
+    Display_Thread_Init(&displayData);
+    
+    display_message = (displayMessageFormat_t *)osPoolAlloc(display_message_pool);
+    display_message->message_type = DISPLAY_INIT;
+    osMessagePut(display_mq, (uint32_t)display_message, osWaitForever);
+    
+    display_message = (displayMessageFormat_t *)osPoolAlloc(display_message_pool);
+    display_message->message_type = DISPLAY_WRITE;
+    display_message->row_number = 1;
+    display_message->text = welcome_message;
+    osMessagePut(display_mq, (uint32_t)display_message, osWaitForever);
+
     
     // init servos
     

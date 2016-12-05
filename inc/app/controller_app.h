@@ -31,12 +31,12 @@
 
 typedef enum {
 	UNINIT,
-	INITIALIZED,
-	CONFIGURATION,
+	INITIALIZED, /* here we can select our program */
 	DRAWING
 } controllerState_t;
 
 typedef enum {
+	CIRCLE,
 	FREE_DRAWING,
 	FROM_TEXT
 } drawingMode_t;

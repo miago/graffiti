@@ -439,6 +439,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\app\controller_app.c</FilePath>
             </File>
+            <File>
+              <FileName>display_app.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\app\display_app.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -493,6 +498,11 @@
               <FileName>servos_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\tasks\servos_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>display_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\src\tasks\display_task.c</FilePath>
             </File>
           </Files>
         </Group>

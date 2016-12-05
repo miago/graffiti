@@ -20,16 +20,15 @@
 /* Includes ------------------------------------------------------------------*/
 #include "display.h"
 #include "osObjects.h"
+#include "display_app.h"
+#include "font5x7.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-uint8_t display_initialized = 0;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-
-
 
 void display_init(void){
 
@@ -83,7 +82,41 @@ void display_init(void){
 	//SPI_I2S_ITConfig(SPI1, SPI_I2S_IT_RXNE, ENABLE);
 	
 	SPI_Cmd(SPI1, ENABLE);
-    
+
+    glcd_select_screen((uint8_t *)&glcd_buffer, &glcd_bbox);
+	glcd_reset();
+	glcd_ST7565R_init();
+
+    /* set up font */
+
+    glcd_tiny_set_font(Font5x7, 5, 7, GLCD_LCD_HEIGHT, GLCD_LCD_WIDTH);
+	glcd_clear_buffer();
+}
+
+void display_clear_row(uint8_t row){
+
+	char text[19] = {' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ', 0};
+
+	if(row == 1){
+		glcd_draw_string_xy(10, ROW1, text);	
+	} else if(row == 2){
+		glcd_draw_string_xy(10, ROW2, text);
+	} else if(row == 3){
+		glcd_draw_string_xy(10, ROW3, text);
+	}
+    glcd_write();
+}
+
+void display_write_row(uint8_t row, char* text){
+
+	if(row == 1){
+		glcd_draw_string_xy(10, ROW1, text);	
+	} else if(row == 2){
+		glcd_draw_string_xy(10, ROW2, text);
+	} else if(row == 3){
+		glcd_draw_string_xy(10, ROW3, text);
+	}
+    glcd_write();
 }
 
 void glcd_spi_write(uint8_t c)
@@ -114,7 +147,7 @@ void glcd_reset(void)
 	/* GLCD RESET LOW() */
 	GPIO_ResetBits(GPIOA, GPIO_Pin_6);
 	
-    /* wait 10 ms */
+    /* wait 10 ms */ 	
     osDelay(10);
 	
 	/* GLCD RESET HIGH() */
