@@ -61,4 +61,6 @@ void controller_decrement_x_position(void);
 void controller_increment_y_position(void);
 void controller_decrement_y_position(void);
 
+uint8_t controller_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx);
+
 #endif

@@ -32,6 +32,16 @@
 #include <cmsis_os.h>
 
 
+/**
+* @brief contains the width of a character (pixel)
+**/
+uint16_t controller_font_width;
+
+/**
+* @brief contains the height of a characters (pixel)
+**/
+uint16_t controller_font_height;
+
 /** 
 * @brief Increment step for manual drawing
 */
@@ -68,6 +78,11 @@ uint8_t current_menu_element_id;
 char text_to_display[6] = "Mirco\n";
 
 /**
+* @brief this variable points to a \n terminated string containg the text to display
+*/
+char* output_text;
+
+/**
 * @brief Initializes the controller 
 **/
 void controller_init(void)
@@ -80,7 +95,10 @@ void controller_init(void)
     laser_position_x = 0;
     laser_position_y = 0;
 
+    output_text = text_to_display;
 
+    controller_font_height = FONT_HEIGHT;
+    controller_font_width = FONT_WIDTH;
 }
 
 /** 
@@ -94,6 +112,9 @@ void controller_process_message(controllerMessageFormat_t* controller_message){
         case CONTROLLER_DRAW_TEXT:
             controller_state = DRAWING;
             controller_drawing_mode = FROM_TEXT;
+            break;
+        default:
+            break;
     }
 }
 
@@ -253,13 +274,13 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
     /* send command to laser */
     pixel_state = text_generator_get_pixel(x_pixel, y_pixel, text_to_display[character_index]);
     if(1 == pixel_state){
-        laserMessage = (servosMailFormat_t *)osPoolAlloc(laser_mail_pool);
+        laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
         laserMessage->message_type = LASER_SET_STATUS;
         laserMessage->laser_state = 1;
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
         osDelay(50);
         /* TODO: Free memory */
-        laserMessage = (servosMailFormat_t *)osPoolAlloc(laser_mail_pool);
+        laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
         laserMessage->message_type = LASER_SET_STATUS;
         laserMessage->laser_state = 0;
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
@@ -268,6 +289,27 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
     }
 }
 
+/**
+* @brief This function calculates the next pixel to be displayed. 
+* Returns 0 if there is no more pixel to be displayes, 1 otherwise.
+**/
+
 uint8_t controller_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx){
-    
+    *next_x = last_x;
+    *next_y = last_y + 1;
+    *next_char_idx = last_char_idx;
+
+    if(*next_y == controller_font_height){
+        *next_x = last_x + 1;
+        *next_y = 0;
+        if(*next_x == controller_font_width){
+            *next_x = 0;
+            *next_char_idx = last_char_idx+1;
+            if(output_text[*next_char_idx] == '\n') {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
 }
