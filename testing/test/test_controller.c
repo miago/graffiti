@@ -91,10 +91,11 @@ void test_controller_get_next_pixel_coordinates(void){
 
 	ret_value = controller_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 2, 3, 4);
 	/* end of string, must return 0 */
-
+	/*
 	printf("next x is %d\n", next_x);
 	printf("next y is %d\n", next_y);
 	printf("next ch index is %d\n", next_character_index);
+	*/
 	TEST_ASSERT_EQUAL(ret_value, 0); /* There are more pixels to be displayed */
 
 

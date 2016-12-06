@@ -269,7 +269,7 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
 
     osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
     osDelay(50);
-    /* TODO: Free memory */
+    osPoolFree(servos_mail_pool, servosMessage);
 
     /* send command to laser */
     pixel_state = text_generator_get_pixel(x_pixel, y_pixel, text_to_display[character_index]);
@@ -277,15 +277,19 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
         laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
         laserMessage->message_type = LASER_SET_STATUS;
         laserMessage->laser_state = 1;
+
+        /* IS IT THE CORRECT MESSAGE QUEUE? */
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
-        osDelay(50);
-        /* TODO: Free memory */
+        evt = osMessageGet(laser_mq, 1);
+        /*sDelay(50);*/
+        osPoolFree(laser_mail_pool, laserMessage);
+
         laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
         laserMessage->message_type = LASER_SET_STATUS;
         laserMessage->laser_state = 0;
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
         osDelay(50);
-        /* TODO: Free memory */
+        osPoolFree(laser_mail_pool, laserMessage);
     }
 }
 
