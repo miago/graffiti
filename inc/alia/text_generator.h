@@ -39,8 +39,8 @@ TODO: take this values from somewhere
 */
 #define TG_CANVAS_MIN_Y -0.5
 #define TG_CANVAS_MAX_Y +0.5
-#define TG_CANVAS_MIN_X -1.0
-#define TG_CANVAS_MAX_X +1.0
+#define TG_CANVAS_MAX_X -1.0
+#define TG_CANVAS_MIN_X +1.0
 
 uint8_t text_generator_get_pixel(uint8_t x_coor, uint8_t y_coor, char character);
 uint8_t text_generator_get_index(char character);

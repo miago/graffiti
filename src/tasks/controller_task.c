@@ -27,6 +27,7 @@
 #include <cmsis_os.h>
 #include "controller_app.h"
 #include "controller_task.h"
+#include "servos_app.h"
 #include "joystick_app.h"
 #include "laser_app.h"
 
@@ -43,17 +44,35 @@ osMessageQDef (joystick_mq_in, 0x16, joystickMailFormat_t);
 extern osMessageQId joystick_mq;
 extern osPoolId joystick_mail_pool;
 
+/* new a message queue for every component: SERVOS */
+osMessageQId servos_mq_in;																		//define the message queue
+osMessageQDef (servos_mq_in, 0x16, servosMailFormat_t);
+extern osMessageQId servos_mq;
+extern osPoolId servos_mail_pool;
+
 /* new a message queue for every component: LASER*/
 osMessageQId laser_mq_in;																		//define the message queue
 osMessageQDef (laser_mq_in, 0x16, laserMailFormat_t);
 extern osMessageQId laser_mq;
 extern osPoolId laser_mail_pool;
+
+osMessageQId controller_mq;
+osMessageQDef (controller_mq, 0x10, controllerMessageFormat_t);
+osPoolDef(controller_message_pool, 16, controllerMessageFormat_t);
+osPoolId controller_message_pool;
+
 /**
 * Initialized the Joystick Thread
 * @param controllerDataBlock
 */
 int Controller_Thread_Init(controllerDataBlock_t * controllerDataBlock)
 {
+    servos_mq_in = osMessageCreate(osMessageQ(servos_mq_in), NULL);
+    //servos_mail_pool = osPoolCreate(osPool(servos_mail_pool));
+    laser_mq_in = osMessageCreate(osMessageQ(laser_mq_in), NULL); 
+    controller_mq = osMessageCreate(osMessageQ(controller_mq),NULL);
+    controller_message_pool = osPoolCreate(osPool(controller_message_pool));
+    
     joystick_mq_in = osMessageCreate(osMessageQ(joystick_mq_in),NULL);
 	tid_controller = osThreadCreate(osThread(Controller_Thread), controllerDataBlock);
 	controllerDataBlock->tid_Controller = tid_controller;
@@ -68,13 +87,22 @@ void Controller_Thread(void const *argument)
     osEvent evt;
     
     joystickMailFormat_t* joystick_mail;
+    controllerMessageFormat_t* controller_message;
 
 	while (1) {
+        
+        /* get message from my own message queue */
+        evt = osMessageGet(controller_mq, 1);
+        if(evt.status == osEventMessage){
+            controller_message = (controllerMessageFormat_t*)evt.value.p;
+            controller_process_message(controller_message);
+            //osPoolFree(controller_message_pool, controller_message);
+        }
+        
         evt = osMessageGet(joystick_mq_in, 1);
 		if(evt.status == osEventMessage){ 
             joystick_mail = (joystickMailFormat_t*)evt.value.p;	
-            controller_process_joystick(joystick_mail);
-            
+            controller_process_joystick(joystick_mail); 
             osPoolFree(joystick_mail_pool, joystick_mail);
 		} 
 

@@ -36,6 +36,8 @@
 osMessageQId laser_mq;															
 osMessageQDef (laser_mq, 0x16, laserMailFormat_t);
 
+extern osMessageQId laser_mq_in;
+
 osPoolDef(laser_mail_pool, 16, laserMailFormat_t);
 osPoolId laser_mail_pool;
 
@@ -64,13 +66,14 @@ void Laser_Thread(void const *argument)
 {
     osEvent evt;	
     laserMailFormat_t* laser_mail;
+    laserMailFormat_t* ret_value;
 
 	while (1) {
         evt = osMessageGet(laser_mq, osWaitForever);
 		if(evt.status == osEventMessage){
             laser_mail = (laserMailFormat_t*)evt.value.p;	
-            laser_process_message(laser_mail);
-            osPoolFree(laser_mail_pool, laser_mail);
+            ret_value = laser_process_message(laser_mail);
+            osMessagePut(laser_mq_in, (uint32_t)ret_value, osWaitForever);
 		}
 		osThreadYield();
 	}

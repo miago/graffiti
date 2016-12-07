@@ -29,6 +29,7 @@
 #include "controller_task.h"
 #include "servos_task.h"
 #include "display_task.h"
+#include "controller_app.h"
 #include <stdio.h>
 #include "alia.h"
 
@@ -91,6 +92,13 @@ displayMessageFormat_t* display_message;
 extern osMessageQId display_mq;
 
 /**
+* @brief pointer to a controller message
+**/ 
+controllerMessageFormat_t* controller_message;
+extern osMessageQId controller_mq;
+extern osPoolId controller_message_pool;
+
+/**
 * @brief Text of the welcome message on the display
 **/
 char welcome_message[10] = "Welcome\n";
@@ -109,8 +117,6 @@ int main(void)
 
 	// create 'thread' functions that start executing,
 	// example: tid_name = osThreadCreate (osThread(name), NULL);
-    
-    
 
 	threadData[0].delay = 1000;
 	threadData[0].pinId = GPIO_Pin_9;
@@ -122,6 +128,10 @@ int main(void)
     // init controller
     
     Controller_Thread_Init(&controllerData);
+    
+    controller_message = (controllerMessageFormat_t *)osPoolAlloc(controller_message_pool);
+    controller_message->message_type = CONTROLLER_INIT;
+    osMessagePut(controller_mq, (uint32_t)controller_message, osWaitForever);
     
     // init joystick
     
@@ -139,10 +149,10 @@ int main(void)
     laser_mail->laser_state = 0;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
     
-    laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
+    /*laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
     laser_mail->message_type = LASER_SET_STATUS;
     laser_mail->laser_state = 1;
-    osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
+    osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);*/
     
     
     // init display
@@ -167,8 +177,21 @@ int main(void)
     servos_mail = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
     servos_mail->message_type = SERVOS_INIT;
     osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
+    
+    /*servos_mail = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
+    servos_mail->message_type = SERVOS_GOTO_POSITION;
+    servos_mail->x_position = +1.0;
+    servos_mail->y_position = +0.5;
+    osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);*/
+   
 
     // send command to controller to begin writing the test
+    
+    osDelay(500); /* should be sufficient! */
+    
+    controller_message = (controllerMessageFormat_t *)osPoolAlloc(controller_message_pool);
+    controller_message->message_type = CONTROLLER_DRAW_TEXT;
+    osMessagePut(controller_mq, (uint32_t)controller_message, osWaitForever);
 
 	Init_Timers();
 

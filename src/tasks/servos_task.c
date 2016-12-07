@@ -36,6 +36,8 @@
 osMessageQId servos_mq;																		//define the message queue
 osMessageQDef (servos_mq, 0x16, servosMailFormat_t);
 
+extern osMessageQId servos_mq_in;	
+
 osPoolDef(servos_mail_pool, 16, servosMailFormat_t);																		//define memory pool
 osPoolId servos_mail_pool;
 
@@ -70,8 +72,9 @@ void Servos_Thread(void const *argument)
         evt = osMessageGet(servos_mq, osWaitForever);
 		if(evt.status == osEventMessage){
             servos_mail = (servosMailFormat_t*)evt.value.p;	
-            servos_process_message(servos_mail);
-            osPoolFree(servos_mail_pool, servos_mail);
+            servos_mail = servos_process_message(servos_mail);
+            osMessagePut(servos_mq_in, (uint32_t)servos_mail, osWaitForever);
+            /*osPoolFree(servos_mail_pool, servos_mail); */
 		}
 		osThreadYield();	// suspend thread
 	}

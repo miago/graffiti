@@ -13,10 +13,10 @@
 
 // standard ascii 5x7 font
 // defines ascii characters 0x20-0x7F (32-127)
-#ifdef TESTING
+#ifndef TESTING
 static const char Font5x7[] = {
 #else
-static const char Font5x7[] PROGMEM = {
+static const char Font5x7[] = {
 #endif
 	0x00, 0x00, 0x00, 0x00, 0x00,// (space)
 	0x00, 0x00, 0x5F, 0x00, 0x00,// !

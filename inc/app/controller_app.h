@@ -45,14 +45,20 @@ typedef enum
 {
 	CONTROLLER_INIT = 0,
     CONTROLLER_DRAW_TEXT = 1,
-    CONTROLLER_DRAW_MANUALLY = 2
+    CONTROLLER_DRAW_MANUALLY = 2,
+    CONTROLLER_DRAW_TEXT_NEXT = 3
 } controllerMessageType_t;
 
 typedef struct {
     controllerMessageType_t message_type;
+    uint8_t character_idx;
+    uint16_t x_pixel;
+    uint16_t y_pixel;
 } controllerMessageFormat_t;
 
 void controller_init(void);
+void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_pixel);
+void controller_process_message(controllerMessageFormat_t* controller_message);
 void controller_process_laser(laserMailFormat_t * laser_mail);
 void controller_process_joystick(joystickMailFormat_t * joystick_mail);
 
