@@ -294,8 +294,13 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
 
     osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
     evt = osMessageGet(servos_mq_in, osWaitForever);
-    osDelay(100); /* ugly, very ugly */
+    osDelay(2000); /* ugly, very ugly */
     osPoolFree(servos_mail_pool, servosMessage);
+    
+    /* wait additional time when coming from the top */
+/*    if(y_pixel == 0) {
+        osDelay(2000);
+    }*/
 
     /* send command to laser */
     pixel_state = text_generator_get_pixel(x_pixel, y_pixel, output_text[character_index]);
@@ -306,7 +311,7 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
 
         /* IS IT THE CORRECT MESSAGE QUEUE? */
         /* let the servos stabilize */
-        osDelay(300);
+        osDelay(2000);
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
         evt = osMessageGet(laser_mq_in, osWaitForever);
         osDelay(800);
@@ -318,7 +323,7 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
         laserMessage->laser_state = 0;
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
         evt = osMessageGet(laser_mq_in, osWaitForever);
-        osDelay(100);
+        osDelay(500);
         osPoolFree(laser_mail_pool, laserMessage);
         osPoolFree(laser_mail_pool, evt.value.p);
     }

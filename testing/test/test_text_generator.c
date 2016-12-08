@@ -165,6 +165,24 @@ void test_get_pixel_coordinate(void){
 	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, y);
 }
 
+void test_get_pixel_coordinate_2(void){
+	canvas_x_size = 8;
+	canvas_y_size = 4;
+	float x,y;
+
+	text_generator_get_pixel_coordinate(&x, &y, 4, 2);
+
+	TEST_ASSERT_FLOAT_WITHIN(000.1, 0.125, x);
+	TEST_ASSERT_FLOAT_WITHIN(000.1, 0.125, y);
+
+	text_generator_get_pixel_coordinate(&x, &y, 7, 0);
+
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 1-0.125, x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -0.5+0.125, y);	
+
+
+}
+
 void test_calculate_pixel_size(void){
 	float pixel_size_x;
 	float pixel_size_y;
