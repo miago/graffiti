@@ -215,3 +215,78 @@ void test_calculate_pixel_size(void){
 	TEST_ASSERT_FLOAT_WITHIN(0.001, 0.05882, pixel_size_y);
 }
 
+void test_text_generator_get_next_pixel_coordinates(void){
+	uint16_t next_x;	
+	uint16_t next_y;
+	uint8_t next_character_index;
+	uint8_t ret_value;
+
+	char text[10] = "Mirco\n";
+
+  	font_x_size = 3;
+	font_y_size = 4;
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 0, 0, 0, text);
+	/* the first pixel to be incremented is the one in y*/
+	TEST_ASSERT_EQUAL(next_x, 0); 
+	TEST_ASSERT_EQUAL(next_y, 1);
+	TEST_ASSERT_EQUAL(next_character_index, 0);
+	TEST_ASSERT_EQUAL(ret_value, 1); /* There are more pixels to be displayed */
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 0, 1, 0, text);
+	TEST_ASSERT_EQUAL(next_x, 0); 
+	TEST_ASSERT_EQUAL(next_y, 2);
+	TEST_ASSERT_EQUAL(next_character_index, 0);
+	TEST_ASSERT_EQUAL(ret_value, 1); /* There are more pixels to be displayed */
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 0, 3, 0, text);
+	/* now the x pixel must be incremented and the y pixel reset to 0 */
+	TEST_ASSERT_EQUAL(next_x, 1); 
+	TEST_ASSERT_EQUAL(next_y, 0);
+	TEST_ASSERT_EQUAL(next_character_index, 0);
+	TEST_ASSERT_EQUAL(ret_value, 1); /* There are more pixels to be displayed */
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 2, 3, 0, text);
+	/* end of a charater, reset pixel coordinates and increment charater index */
+	TEST_ASSERT_EQUAL(next_x, 0); 
+	TEST_ASSERT_EQUAL(next_y, 0);
+	TEST_ASSERT_EQUAL(next_character_index, 1);
+	TEST_ASSERT_EQUAL(ret_value, 1); /* There are more pixels to be displayed */
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 2, 3, 3, text);
+	/* end of a charater, reset pixel coordinates and increment charater index */
+	TEST_ASSERT_EQUAL(next_x, 0); 
+	TEST_ASSERT_EQUAL(next_y, 0);
+	TEST_ASSERT_EQUAL(next_character_index, 4);
+	TEST_ASSERT_EQUAL(ret_value, 1); /* There are more pixels to be displayed */
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 2, 3, 4, text);
+	/* end of string, must return 0 */
+	/*
+	printf("next x is %d\n", next_x);
+	printf("next y is %d\n", next_y);
+	printf("next ch index is %d\n", next_character_index);
+	*/
+	TEST_ASSERT_EQUAL(ret_value, 0); /* There are more pixels to be displayed */
+
+}
+
+void test_text_generator_get_next_pixel_coordinates_2(void){
+	uint16_t next_x;	
+	uint16_t next_y;
+	uint8_t next_character_index;
+	uint8_t ret_value;
+
+	char text[10] = "Mirco\n";
+
+  	font_x_size = 5;
+	font_y_size = 7;
+
+	ret_value = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_index, 4, 6, 0, text);
+	/* the first pixel to be incremented is the one in y*/
+	TEST_ASSERT_EQUAL(next_x, 0); 
+	TEST_ASSERT_EQUAL(next_y, 0);
+	TEST_ASSERT_EQUAL(next_character_index, 1);
+	TEST_ASSERT_EQUAL(ret_value, 1); /* There are more pixels to be displayed */
+
+}

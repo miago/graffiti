@@ -48,5 +48,6 @@ uint8_t text_generator_get_y_pixel(uint16_t data, uint8_t y_pixel);
 void text_generator_get_pixel_coordinate(float* x_ret, float* y_ret, uint16_t x_pixel, uint16_t y_pixel);
 float text_generator_calculate_pixel_size_x(void);
 float text_generator_calculate_pixel_size_y(void);
+uint8_t text_generator_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx, char* text);
 
 #endif

@@ -279,58 +279,66 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
     
     uint16_t next_x, next_y;
     uint8_t next_character_idx;
-    uint8_t is_there_more;
+    uint8_t is_there_more = 1;
 
-    absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + 50;
-    absolute_pixel_y = y_pixel + 3;
-    /* align at 0,0 (bottom left) */
-    text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
+    while(is_there_more == 1){
+        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel;
+        absolute_pixel_y = y_pixel;
+        /* align at 0,0 (bottom left) */
+        text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
 
-    /* send command to servo */
-    servosMessage = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
-    servosMessage->message_type = SERVOS_GOTO_POSITION;
-    servosMessage->x_position = x_coordinate;
-    servosMessage->y_position = y_coordinate;
+        /* send command to servo */
+        servosMessage = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
+        servosMessage->message_type = SERVOS_GOTO_POSITION;
+        servosMessage->x_position = x_coordinate;
+        servosMessage->y_position = y_coordinate;
 
-    osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
-    evt = osMessageGet(servos_mq_in, osWaitForever);
-    osDelay(2000); /* ugly, very ugly */
-    osPoolFree(servos_mail_pool, servosMessage);
-    
-    /* wait additional time when coming from the top */
-/*    if(y_pixel == 0) {
-        osDelay(2000);
-    }*/
+        osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+        evt = osMessageGet(servos_mq_in, osWaitForever);
+        osDelay(100); /* ugly, very ugly */
+        osPoolFree(servos_mail_pool, servosMessage);
+        
+        /* wait additional time when coming from the top */
+    /*    if(y_pixel == 0) {
+            osDelay(2000);
+        }*/
 
-    /* send command to laser */
-    pixel_state = text_generator_get_pixel(x_pixel, y_pixel, output_text[character_index]);
-    if(1 == pixel_state){
-        laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
-        laserMessage->message_type = LASER_SET_STATUS;
-        laserMessage->laser_state = 1;
+        /* send command to laser */
+        pixel_state = text_generator_get_pixel(x_pixel, y_pixel, output_text[character_index]);
+        if(1 == pixel_state){
+            laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
+            laserMessage->message_type = LASER_SET_STATUS;
+            laserMessage->laser_state = 1;
 
-        /* IS IT THE CORRECT MESSAGE QUEUE? */
-        /* let the servos stabilize */
-        osDelay(2000);
-        osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
-        evt = osMessageGet(laser_mq_in, osWaitForever);
-        osDelay(800);
-        osPoolFree(laser_mail_pool, laserMessage);
-        osPoolFree(laser_mail_pool, evt.value.p);
+            /* IS IT THE CORRECT MESSAGE QUEUE? */
+            /* let the servos stabilize */
+            osDelay(200);
+            osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
+            evt = osMessageGet(laser_mq_in, osWaitForever);
+            osDelay(200);
+            osPoolFree(laser_mail_pool, laserMessage);
+            osPoolFree(laser_mail_pool, evt.value.p);
 
-        laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
-        laserMessage->message_type = LASER_SET_STATUS;
-        laserMessage->laser_state = 0;
-        osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
-        evt = osMessageGet(laser_mq_in, osWaitForever);
-        osDelay(500);
-        osPoolFree(laser_mail_pool, laserMessage);
-        osPoolFree(laser_mail_pool, evt.value.p);
-    }
+            laserMessage = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
+            laserMessage->message_type = LASER_SET_STATUS;
+            laserMessage->laser_state = 0;
+            osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
+            evt = osMessageGet(laser_mq_in, osWaitForever);
+            osDelay(200);
+            osPoolFree(laser_mail_pool, laserMessage);
+            osPoolFree(laser_mail_pool, evt.value.p);
+        }
+        
+        is_there_more = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_idx, x_pixel, y_pixel, character_index, output_text);
+        x_pixel = next_x;
+        y_pixel = next_y;
+        character_index = next_character_idx;
+        
+    } /* end while loop */
     
     /* next pixel */
     
-    is_there_more = controller_get_next_pixel_coordinates(&next_x, &next_y, &next_character_idx, x_pixel, y_pixel, character_index);
+ 
     if(is_there_more) {
         next_message = (controllerMessageFormat_t *)osPoolAlloc(controller_message_pool);
         next_message->message_type = CONTROLLER_DRAW_TEXT_NEXT;
@@ -341,27 +349,4 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
     }
 }
 
-/**
-* @brief This function calculates the next pixel to be displayed. 
-* Returns 0 if there is no more pixel to be displayes, 1 otherwise.
-**/
 
-uint8_t controller_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx){
-    *next_x = last_x;
-    *next_y = last_y + 1;
-    *next_char_idx = last_char_idx;
-
-    if(*next_y == controller_font_height){
-        *next_x = last_x + 1;
-        *next_y = 0;
-        if(*next_x == controller_font_width){
-            *next_x = 0;
-            *next_char_idx = last_char_idx+1;
-            if(output_text[*next_char_idx] == '\n') {
-                return 0;
-            }
-        }
-    }
-
-    return 1;
-}

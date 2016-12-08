@@ -88,3 +88,28 @@ float text_generator_calculate_pixel_size_x(void){
 float text_generator_calculate_pixel_size_y(void){
 	return ((TG_CANVAS_MAX_Y - TG_CANVAS_MIN_Y) / (float)canvas_y_size);
 }
+
+/**
+* @brief This function calculates the next pixel to be displayed. 
+* Returns 0 if there is no more pixel to be displayes, 1 otherwise.
+**/
+
+uint8_t text_generator_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx, char* text){
+    *next_x = last_x;
+    *next_y = last_y + 1;
+    *next_char_idx = last_char_idx;
+
+    if(*next_y == font_y_size){
+        *next_x = last_x + 1;
+        *next_y = 0;
+        if(*next_x == font_x_size){
+            *next_x = 0;
+            *next_char_idx = last_char_idx+1;
+            if(text[*next_char_idx] == '\n') {
+                return 0;
+            }
+        }
+    }
+
+    return 1;
+}
