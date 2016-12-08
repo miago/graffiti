@@ -122,11 +122,11 @@ void test_servos_pan_angle_to_timervalue(void) {
 	
 	tv = servos_pan_angle_to_timervalue(-3.141592653589793/2);
 
-	TEST_ASSERT_UINT16_WITHIN(1, 292, tv);
+	TEST_ASSERT_UINT16_WITHIN(1, 1208, tv);
 	
 	tv = servos_pan_angle_to_timervalue(+3.141592653589793/2);
 
-	TEST_ASSERT_EQUAL(1208, tv);
+	TEST_ASSERT_UINT16_WITHIN(1, 292, tv);
 }
 
 void test_servos_tilt_angle_to_timervalue(void) {

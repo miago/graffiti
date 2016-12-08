@@ -4,6 +4,9 @@
 
 extern uint16_t canvas_x_size;
 extern uint16_t canvas_y_size;
+extern uint16_t font_x_size;
+extern uint16_t font_y_size;
+
 
 /* sometimes you may want to get at local data in a module.
  * for example: If you plan to pass by reference, this could be useful
@@ -13,6 +16,8 @@ extern uint16_t canvas_y_size;
 void setUp(void)
 {
   	/* This is run before EACH TEST */
+  	font_y_size = 7;
+  	font_x_size = 5;
 }
 
 void tearDown(void)
@@ -46,6 +51,43 @@ void test_get_pixel_one(void){
 	TEST_ASSERT_EQUAL(1, pixel);	
 }
 
+/* get the values of the pixels for the character '6' */
+void test_get_pixel_six(void){
+	uint8_t pixel;
+
+	/*first column */
+	pixel = text_generator_get_pixel(0, 0, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+	pixel = text_generator_get_pixel(0, 1, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(0, 2, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(0, 3, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(0, 4, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(0, 5, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+	pixel = text_generator_get_pixel(0, 6, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+
+	/*second column */
+	pixel = text_generator_get_pixel(1, 0, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(1, 1, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+	pixel = text_generator_get_pixel(1, 2, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+	pixel = text_generator_get_pixel(1, 3, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(1, 4, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+	pixel = text_generator_get_pixel(1, 5, '6');
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_pixel(1, 6, '6');
+	TEST_ASSERT_EQUAL(0, pixel);
+}
+
 void test_get_index_space(void){
 	uint8_t index;
 
@@ -68,24 +110,25 @@ void test_get_y_pixel_empty(void){
 	TEST_ASSERT_EQUAL(0, pixel);
 }
 
-void test_get_y_pixel_filled(void){
-	uint16_t data = 0x05; /* 0b0101*/
+void test_get_y_pixel_six(void){
+	uint16_t data = 0x3C; /* first column of '6' */
 	uint8_t pixel;
 
 	pixel = text_generator_get_y_pixel(data, 0);
-	TEST_ASSERT_EQUAL(1, pixel);
-
-	pixel = text_generator_get_y_pixel(data, 1);
 	TEST_ASSERT_EQUAL(0, pixel);
-
+	pixel = text_generator_get_y_pixel(data, 1);
+	TEST_ASSERT_EQUAL(1, pixel);
 	pixel = text_generator_get_y_pixel(data, 2);
 	TEST_ASSERT_EQUAL(1, pixel);
-
 	pixel = text_generator_get_y_pixel(data, 3);
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_y_pixel(data, 4);
+	TEST_ASSERT_EQUAL(1, pixel);
+	pixel = text_generator_get_y_pixel(data, 5);
+	TEST_ASSERT_EQUAL(0, pixel);
+	pixel = text_generator_get_y_pixel(data, 6);
 	TEST_ASSERT_EQUAL(0, pixel);
 
-	pixel = text_generator_get_y_pixel(data, 4);
-	TEST_ASSERT_EQUAL(0, pixel);
 }
 
 void test_get_y_pixel_one(void){

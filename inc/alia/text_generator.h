@@ -29,18 +29,18 @@
 #include <stdint.h>
 
 #define TG_FIRST_CHAR 0x20
-#define TG_X_PIXELS 5
-#define TG_Y_PIXELS 7
-#define TG_PIXELS_X 100
-#define TG_PIXELS_Y 50
+#define TG_FONT_X_PIXELS 5
+#define TG_FONT_Y_PIXELS 7
+#define TG_CANVAS_X_PIXELS 100
+#define TG_CANVAS_Y_PIXELS 50
 
 /*
 TODO: take this values from somewhere
 */
 #define TG_CANVAS_MIN_Y -0.5
 #define TG_CANVAS_MAX_Y +0.5
-#define TG_CANVAS_MAX_X -1.0
-#define TG_CANVAS_MIN_X +1.0
+#define TG_CANVAS_MAX_X +1.0
+#define TG_CANVAS_MIN_X -1.0
 
 uint8_t text_generator_get_pixel(uint8_t x_coor, uint8_t y_coor, char character);
 uint8_t text_generator_get_index(char character);

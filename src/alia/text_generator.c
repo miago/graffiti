@@ -4,14 +4,26 @@
 #include <stdint.h>
 
 /**
-* @brief Number of pixels in X
+* @brief Number of pixels in X of the canvas
 **/
-uint16_t canvas_x_size = TG_PIXELS_X;
+uint16_t canvas_x_size = TG_CANVAS_X_PIXELS;
 
 /**
-* @brief Number of pixels in Y
+* @brief Number of pixels in Y of the canvas
 **/
-uint16_t canvas_y_size = TG_PIXELS_Y;
+uint16_t canvas_y_size = TG_CANVAS_Y_PIXELS;
+
+/**
+* @brief Number of x pixels of the font
+*/
+uint16_t font_x_size = TG_FONT_X_PIXELS;
+
+/**
+* @brief Number of y pixels of the font
+*/
+
+uint16_t font_y_size = TG_FONT_Y_PIXELS;
+
 
 /**
 * @brief get the pixel status of a given pixel of a given character
@@ -34,7 +46,7 @@ uint8_t text_generator_get_pixel(uint8_t x_coor, uint8_t y_coor, char character)
 
 uint8_t text_generator_get_index(char character){
 	uint8_t index;
-	index = (character - TG_FIRST_CHAR)*TG_X_PIXELS;
+	index = (character - TG_FIRST_CHAR)*font_x_size;
 	return index;	
 }
 
@@ -44,13 +56,9 @@ uint8_t text_generator_get_index(char character){
 
 uint8_t text_generator_get_y_pixel(uint16_t data, uint8_t y_pixel){
 	uint8_t pixel = 0;
-	pixel = data & (1<<y_pixel);
-
-	if(pixel == 0x00) {
-		return 0;	
-	} else {
-		return 1;
-	}	
+	pixel = data >> (font_y_size-1-y_pixel);
+	pixel = pixel & 0x01;
+	return pixel;
 }
 
 /** 
