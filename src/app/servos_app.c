@@ -27,6 +27,11 @@
 #include "servos_hal.h"
 #include "servos_app.h"
 #include "math.h"
+/*
+#include "cmsis_os.h"
+#include "laser_app.h"
+*/
+
 /**
 * @brief Stores the current tilt angle
  */
@@ -197,6 +202,12 @@ servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail)
             servos_draw_square();
             servos_mail->message_type = SERVOS_OK;
             return servos_mail;   
+        
+        case SERVOS_DRAW_STAR:
+            servos_draw_star();
+            servos_mail->message_type = SERVOS_OK;
+            return servos_mail;
+            
 
         default:
             servos_mail->message_type = SERVOS_ERROR;
@@ -228,5 +239,27 @@ void servos_draw_square(void) {
     servos_set_position(-1, 0);
     osDelay(delay_between);
     servos_set_position(-1, 0.5);
+*/
+}
+
+
+void servos_draw_star(void){
+/*
+    float x_positions[20] = {0.0, 0.0, 0.0, 0.0,  0.0};
+    float y_positions[20] = {0.0, 0.1, 0.0, -0.1, 0.0};
+    uint8_t positions = 5;
+    uint8_t counter = 0;
+    uint16_t delay = 1000;
+    uint16_t settle_delay = 400;
+    uint16_t laser_on_time = 20;
+    
+    for(counter = 0; counter < positions; counter++){
+        servos_set_position(x_positions[counter], y_positions[counter]);
+        osDelay(settle_delay);
+        laser_set_on();
+        osDelay(laser_on_time);
+        laser_set_off();
+        osDelay(delay);
+    }
 */
 }

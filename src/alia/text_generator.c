@@ -31,7 +31,7 @@ uint16_t font_y_size = TG_FONT_Y_PIXELS;
 **/
 
 uint8_t text_generator_get_pixel(uint8_t x_coor, uint8_t y_coor, char character){
-	uint8_t index;
+	uint16_t index;
 	uint16_t data;
 	index = text_generator_get_index(character);
 	index = index + x_coor;
@@ -44,8 +44,8 @@ uint8_t text_generator_get_pixel(uint8_t x_coor, uint8_t y_coor, char character)
 * @brief get the start index of a desired character
 **/
 
-uint8_t text_generator_get_index(char character){
-	uint8_t index;
+uint16_t text_generator_get_index(char character){
+	uint16_t index;
 	index = (character - TG_FIRST_CHAR)*font_x_size;
 	return index;	
 }
@@ -94,7 +94,7 @@ float text_generator_calculate_pixel_size_y(void){
 * Returns 0 if there is no more pixel to be displayes, 1 otherwise.
 **/
 
-uint8_t text_generator_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx, char* text){
+uint8_t text_generator_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint16_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint16_t last_char_idx, char* text){
     *next_x = last_x;
     *next_y = last_y + 1;
     *next_char_idx = last_char_idx;

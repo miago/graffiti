@@ -57,7 +57,7 @@ typedef struct {
 } controllerMessageFormat_t;
 
 void controller_init(void);
-void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_pixel);
+void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y_pixel);
 void controller_process_message(controllerMessageFormat_t* controller_message);
 void controller_process_laser(laserMailFormat_t * laser_mail);
 void controller_process_joystick(joystickMailFormat_t * joystick_mail);

@@ -23,7 +23,10 @@
  * @brief This file contains the logic of the controller
  */
 
+#include <string.h>
+#include <stdio.h>
 #include "controller_app.h"
+#include "display_app.h"
 #include "joystick_app.h"
 #include "laser_app.h"
 #include "servos_app.h"
@@ -67,6 +70,8 @@ extern osMessageQId laser_mq_in;
 extern osMessageQId servos_mq_in;
 extern osPoolId controller_message_pool;
 extern osMessageQId controller_mq;
+extern osPoolId display_message_pool;
+extern osMessageQId display_mq;
 
 /** 
 * @brief Contains the current x position of the laser/servos
@@ -312,7 +317,7 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
 
             /* IS IT THE CORRECT MESSAGE QUEUE? */
             /* let the servos stabilize */
-            osDelay(200);
+            osDelay(50);
             osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
             evt = osMessageGet(laser_mq_in, osWaitForever);
             osDelay(200);
@@ -324,7 +329,7 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
             laserMessage->laser_state = 0;
             osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
             evt = osMessageGet(laser_mq_in, osWaitForever);
-            osDelay(200);
+            osDelay(20);
             osPoolFree(laser_mail_pool, laserMessage);
             osPoolFree(laser_mail_pool, evt.value.p);
         }
@@ -339,14 +344,14 @@ void controller_draw_text(uint8_t character_index, uint16_t x_pixel, uint16_t y_
     /* next pixel */
     
  
-    if(is_there_more) {
+    /*if(is_there_more) {
         next_message = (controllerMessageFormat_t *)osPoolAlloc(controller_message_pool);
         next_message->message_type = CONTROLLER_DRAW_TEXT_NEXT;
         next_message->x_pixel = next_x;
         next_message->y_pixel = next_y;
         next_message->character_idx = next_character_idx;
         osMessagePut(controller_mq, (uint32_t)next_message, osWaitForever);
-    }
+    }*/
 }
 
 
