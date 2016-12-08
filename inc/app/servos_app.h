@@ -38,6 +38,7 @@ typedef enum
 	SERVOS_INIT = 0,
     SERVOS_GOTO_POSITION = 1, /* kindly asks the module to move the servo 
     to the specified position */
+    SERVOS_DRAW_SQUARE = 2,
 
 	/* commands from the servos module to other modules */
     SERVOS_OK = 10,
@@ -62,5 +63,6 @@ Angles servos_point_to_angles(Point* p) ;
 uint16_t servos_pan_angle_to_timervalue(float angle);
 uint16_t servos_tilt_angle_to_timervalue(float angle);
 servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail);
+void servos_draw_square(void);
 
 #endif

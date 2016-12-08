@@ -192,9 +192,41 @@ servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail)
             servos_set_position(servos_mail->x_position, servos_mail->y_position);
             servos_mail->message_type = SERVOS_OK;
             return servos_mail;
+        
+        case SERVOS_DRAW_SQUARE:
+            servos_draw_square();
+            servos_mail->message_type = SERVOS_OK;
+            return servos_mail;   
 
         default:
             servos_mail->message_type = SERVOS_ERROR;
             return servos_mail;
     }
+}
+
+/** 
+*
+*/
+
+void servos_draw_square(void) {
+    /*
+    uint16_t delay_between = 1000;
+    servos_set_position(-1, 0.5);
+    osDelay(delay_between);
+    servos_set_position(0, 0.5);
+    osDelay(delay_between);
+    servos_set_position(+1, 0.5);
+    osDelay(delay_between);
+    servos_set_position(+1, 0);
+    osDelay(delay_between);
+    servos_set_position(+1, -0.5);
+    osDelay(delay_between);
+    servos_set_position(0, -0.5);
+    osDelay(delay_between);
+    servos_set_position(-1, -0.5);
+    osDelay(delay_between);
+    servos_set_position(-1, 0);
+    osDelay(delay_between);
+    servos_set_position(-1, 0.5);
+*/
 }
