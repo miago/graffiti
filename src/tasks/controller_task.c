@@ -40,21 +40,21 @@ osThreadDef(Controller_Thread, osPriorityNormal, 1, 0);	// thread object
 
 /* new a message queue for every component: JOYSTICK */
 osMessageQId joystick_mq_in;																		//define the message queue
-osMessageQDef (joystick_mq_in, 0x16, joystickMailFormat_t);
+osMessageQDef (joystick_mq_in, 0x16, joystickMessageFormat_t);
 extern osMessageQId joystick_mq;
-extern osPoolId joystick_mail_pool;
+extern osPoolId joystick_message_pool;
 
 /* new a message queue for every component: SERVOS */
 osMessageQId servos_mq_in;																		//define the message queue
-osMessageQDef (servos_mq_in, 0x16, servosMailFormat_t);
+osMessageQDef (servos_mq_in, 0x16, servosMessageFormat_t);
 extern osMessageQId servos_mq;
-extern osPoolId servos_mail_pool;
+extern osPoolId servos_message_pool;
 
 /* new a message queue for every component: LASER*/
 osMessageQId laser_mq_in;																		//define the message queue
-osMessageQDef (laser_mq_in, 0x16, laserMailFormat_t);
+osMessageQDef (laser_mq_in, 0x16, laserMessageFormat_t);
 extern osMessageQId laser_mq;
-extern osPoolId laser_mail_pool;
+extern osPoolId laser_message_pool;
 
 osMessageQId controller_mq;
 osMessageQDef (controller_mq, 0x10, controllerMessageFormat_t);
@@ -86,7 +86,7 @@ void Controller_Thread(void const *argument)
 {
     osEvent evt;
     
-    joystickMailFormat_t* joystick_mail;
+    joystickMessageFormat_t* joystick_mail;
     controllerMessageFormat_t* controller_message;
 
 	while (1) {
@@ -101,7 +101,7 @@ void Controller_Thread(void const *argument)
         
         evt = osMessageGet(joystick_mq_in, 1);
 		if(evt.status == osEventMessage){ 
-            joystick_mail = (joystickMailFormat_t*)evt.value.p;	
+            joystick_mail = (joystickMessageFormat_t*)evt.value.p;	
             controller_process_joystick(joystick_mail); 
             osPoolFree(joystick_mail_pool, joystick_mail);
 		} 

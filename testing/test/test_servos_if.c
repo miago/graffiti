@@ -22,8 +22,8 @@ void tearDown(void)
 }
 
 void test_servos_init(void){
-	servosMailFormat_t servos_message;
-	servosMailFormat_t* servos_return_message;
+	servosMessageFormat_t servos_message;
+	servosMessageFormat_t* servos_return_message;
 
 	servos_message.message_type = SERVOS_INIT;
 	servos_return_message = servos_process_message(&servos_message);
@@ -32,8 +32,8 @@ void test_servos_init(void){
 }
 
 void test_servos_without_init(void){
-	servosMailFormat_t servos_message;
-	servosMailFormat_t* servos_return_message;
+	servosMessageFormat_t servos_message;
+	servosMessageFormat_t* servos_return_message;
 
 	servos_message.message_type = SERVOS_GOTO_POSITION;
 	servos_return_message = servos_process_message(&servos_message);
@@ -42,8 +42,8 @@ void test_servos_without_init(void){
 }
 
 void test_servos_goto_position(void){
-	servosMailFormat_t servos_message;
-	servosMailFormat_t* servos_return_message;
+	servosMessageFormat_t servos_message;
+	servosMessageFormat_t* servos_return_message;
 
 	servos_message.message_type = SERVOS_INIT;
 	servos_process_message(&servos_message);

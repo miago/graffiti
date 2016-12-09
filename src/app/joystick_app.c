@@ -40,7 +40,7 @@ uint8_t joystick_rising = 0x00;
 **/
 uint8_t joystick_falling = 0x00;
 
-joystickMailFormat_t joystick_in_message;
+joystickMessageFormat_t joystick_in_message;
 joystickEvent_t joystick_event;
 joystickState_t joystick_level;
 
@@ -63,7 +63,7 @@ void joystick_update(void){
 	joystick_update_hal();
 }
 
-joystickMailFormat_t* joystick_process_message(joystickMailFormat_t * joystick_mail)
+joystickMessageFormat_t* joystick_process_message(joystickMessageFormat_t * joystick_mail)
 {
     joystick_in_message = *joystick_mail;
     joystick_mail->message_type = JOYSTICK_NO_REPLY;

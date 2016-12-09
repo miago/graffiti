@@ -12,10 +12,10 @@ extern char* output_text;
 
 osMessageQId laser_mq;	
 osMessageQId servos_mq;	
-osPoolId laser_mail_pool = (osPoolId)0;
-osPoolId servos_mail_pool = (osPoolId)1;
-laserMailFormat_t laser_message[100]; /* 100 should be fine */
-servosMailFormat_t servos_message[100];
+osPoolId laser_message_pool = (osPoolId)3;
+osPoolId servos_message_pool = (osPoolId)4;
+laserMessageFormat_t laser_message[100]; /* 100 should be fine */
+servosMessageFormat_t servos_message[100];
 uint8_t laser_pool_counter = 0;
 uint8_t servos_pool_counter = 0;
 char testText[20] = "Mirco\n";  
@@ -97,8 +97,4 @@ void test_controller_get_next_pixel_coordinates(void){
 	printf("next ch index is %d\n", next_character_index);
 	*/
 	TEST_ASSERT_EQUAL(ret_value, 0); /* There are more pixels to be displayed */
-
-
-
 }
-

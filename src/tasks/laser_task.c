@@ -34,12 +34,12 @@
  *---------------------------------------------------------------------------*/
 
 osMessageQId laser_mq;															
-osMessageQDef (laser_mq, 0x16, laserMailFormat_t);
+osMessageQDef (laser_mq, 0x16, laserMessageFormat_t);
 
 extern osMessageQId laser_mq_in;
 
-osPoolDef(laser_mail_pool, 16, laserMailFormat_t);
-osPoolId laser_mail_pool;
+osPoolDef(laser_message_pool, 16, laserMessageFormat_t);
+osPoolId laser_message_pool;
 
 osThreadId tid_Laser;		
 osThreadDef(Laser_Thread, osPriorityNormal, 1, 0);
@@ -54,7 +54,7 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
     laser_mq = osMessageCreate(osMessageQ(laser_mq),NULL);
 	tid_Laser = osThreadCreate(osThread(Laser_Thread), laserDataBlock);
 	laserDataBlock->tid_Laser = tid_Laser;
-    laser_mail_pool = osPoolCreate(osPool(laser_mail_pool));
+    laser_message_pool = osPoolCreate(osPool(laser_message_pool));
     
 	if (!tid_Laser)
 		return (-1);
@@ -65,13 +65,13 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 void Laser_Thread(void const *argument)
 {
     osEvent evt;	
-    laserMailFormat_t* laser_mail;
-    laserMailFormat_t* ret_value;
+    laserMessageFormat_t* laser_mail;
+    laserMessageFormat_t* ret_value;
 
 	while (1) {
         evt = osMessageGet(laser_mq, osWaitForever);
 		if(evt.status == osEventMessage){
-            laser_mail = (laserMailFormat_t*)evt.value.p;	
+            laser_mail = (laserMessageFormat_t*)evt.value.p;	
             ret_value = laser_process_message(laser_mail);
             osMessagePut(laser_mq_in, (uint32_t)ret_value, osWaitForever);
 		}

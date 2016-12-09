@@ -89,14 +89,14 @@ void test_get_pixel_six(void){
 }
 
 void test_get_index_space(void){
-	uint8_t index;
+	uint16_t index;
 
 	index = text_generator_get_index(' ');
 	TEST_ASSERT_EQUAL(0, index);
 }
 
 void test_get_index_0(void){
-	uint8_t index;
+	uint16_t index;
 
 	index = text_generator_get_index('0');
 	TEST_ASSERT_EQUAL(80, index);
@@ -218,7 +218,7 @@ void test_calculate_pixel_size(void){
 void test_text_generator_get_next_pixel_coordinates(void){
 	uint16_t next_x;	
 	uint16_t next_y;
-	uint8_t next_character_index;
+	uint16_t next_character_index;
 	uint8_t ret_value;
 
 	char text[10] = "Mirco\n";
@@ -274,7 +274,7 @@ void test_text_generator_get_next_pixel_coordinates(void){
 void test_text_generator_get_next_pixel_coordinates_2(void){
 	uint16_t next_x;	
 	uint16_t next_y;
-	uint8_t next_character_index;
+	uint16_t next_character_index;
 	uint8_t ret_value;
 
 	char text[10] = "Mirco\n";

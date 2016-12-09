@@ -56,12 +56,12 @@ typedef struct
 {
 	laserMessageType_t message_type;
     uint8_t laser_state;
-} laserMailFormat_t;
+} laserMessageFormat_t;
 
 void laser_init(void);
 void laser_set_on(void);
 void laser_set_off(void);
-laserMailFormat_t* laser_process_message(laserMailFormat_t* mail);
+laserMessageFormat_t* laser_process_message(laserMessageFormat_t* mail);
 
 laser_status_t laser_get_status(void);
 

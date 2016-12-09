@@ -24,8 +24,8 @@ void tearDown(void)
 
 void test_laser_init(void){
 	
-	laserMailFormat_t laser_message;
-	laserMailFormat_t* laser_return_message;
+	laserMessageFormat_t laser_message;
+	laserMessageFormat_t* laser_return_message;
 
 	laser_message.message_type = LASER_INIT;
 	laser_return_message = laser_process_message(&laser_message);
@@ -34,8 +34,8 @@ void test_laser_init(void){
 }
 
 void test_laser_without_init(void){
-	laserMailFormat_t laser_message;
-	laserMailFormat_t* laser_return_message;
+	laserMessageFormat_t laser_message;
+	laserMessageFormat_t* laser_return_message;
 
 	laser_message.message_type = LASER_SET_STATUS;
 	laser_return_message = laser_process_message(&laser_message);
@@ -44,8 +44,8 @@ void test_laser_without_init(void){
 }
 
 void test_laser_get_status(void){
-	laserMailFormat_t laser_message;
-	laserMailFormat_t* laser_return_message;
+	laserMessageFormat_t laser_message;
+	laserMessageFormat_t* laser_return_message;
 
 	laser_message.message_type = LASER_INIT;
 	laser_process_message(&laser_message);
@@ -63,8 +63,8 @@ void test_laser_get_status(void){
 }
 
 void test_laser_set_status(void){
-	laserMailFormat_t laser_message;
-	laserMailFormat_t* laser_return_message;
+	laserMessageFormat_t laser_message;
+	laserMessageFormat_t* laser_return_message;
 
 	laser_message.message_type = LASER_INIT;
 	laser_process_message(&laser_message);
@@ -88,8 +88,8 @@ void test_laser_set_status(void){
 }
 
 void test_laser_toggle(void){
-	laserMailFormat_t laser_message;
-	laserMailFormat_t* laser_return_message;
+	laserMessageFormat_t laser_message;
+	laserMessageFormat_t* laser_return_message;
 
 	laser_message.message_type = LASER_INIT;
 	laser_process_message(&laser_message);

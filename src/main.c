@@ -51,33 +51,33 @@ controllerDataBlock_t controllerData;
 * @brief data of the Laser Task
 **/
 laserDataBlock_t laserData;
-extern osPoolId laser_mail_pool;
+extern osPoolId laser_message_pool;
 /**
 * @brief pointer to a message for the laser task
 **/
-laserMailFormat_t* laser_mail;
+laserMessageFormat_t* laser_mail;
 extern osMessageQId laser_mq;
 
 /**
 * @brief data of the Joystick Task
 **/
 joystickDataBlock_t joystickData;
-extern osPoolId joystick_mail_pool;
+extern osPoolId joystick_message_pool;
 /**
 * @brief pointer to a message for the joystick task
 **/
-joystickMailFormat_t* joystick_mail;
+joystickMessageFormat_t* joystick_mail;
 extern osMessageQId joystick_mq;
 
 /**
 * @brief data of the Servos Task
 **/
 servosDataBlock_t servosData;
-extern osPoolId servos_mail_pool;
+extern osPoolId servos_message_pool;
 /**
 * @brief pointer to a message for the servos task
 **/
-servosMailFormat_t* servos_mail;
+servosMessageFormat_t* servos_mail;
 extern osMessageQId servos_mq;
 
 /**
@@ -136,7 +136,7 @@ int main(void)
     // init joystick
     
     Joystick_Thread_Init(&joystickData);
-    joystick_mail = (joystickMailFormat_t *)osPoolAlloc(joystick_mail_pool);
+    joystick_mail = (joystickMessageFormat_t *)osPoolAlloc(joystick_message_pool);
     joystick_mail->message_type = JOYSTICK_INIT;
     osMessagePut(joystick_mq, (uint32_t)joystick_mail, osWaitForever);
    
@@ -144,7 +144,7 @@ int main(void)
     
     Laser_Thread_Init(&laserData);
     
-    laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
+    laser_mail = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
     laser_mail->message_type = LASER_INIT;
     laser_mail->laser_state = 0;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
@@ -174,7 +174,7 @@ int main(void)
     
     Servos_Thread_Init(&servosData);
     
-    servos_mail = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
+    servos_mail = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
     servos_mail->message_type = SERVOS_INIT;
     osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
     

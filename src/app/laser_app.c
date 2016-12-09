@@ -71,7 +71,7 @@ laser_status_t laser_get_status(void){
 /**
 * @brief Message process routine of the laser module
 **/
-laserMailFormat_t* laser_process_message(laserMailFormat_t* mail)
+laserMessageFormat_t* laser_process_message(laserMessageFormat_t* mail)
 {
     laser_status_t laser_status;
     if((mail->message_type != LASER_INIT) && (laser_initialized == 0)){

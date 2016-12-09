@@ -85,12 +85,12 @@ typedef struct
 	joystickMessageType_t message_type;
     joystickState_t * joystick_state;
     joystickEvent_t * joystick_event;
-} joystickMailFormat_t;
+} joystickMessageFormat_t;
 
 void joystick_init(void);
 
 void joystick_update(void);
 
-joystickMailFormat_t* joystick_process_message(joystickMailFormat_t * joystick_mail);
+joystickMessageFormat_t* joystick_process_message(joystickMessageFormat_t * joystick_mail);
 
 #endif

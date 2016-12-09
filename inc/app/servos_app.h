@@ -50,7 +50,7 @@ typedef struct {
     servosMessageType_t message_type;
     float x_position;
     float y_position;
-} servosMailFormat_t;
+} servosMessageFormat_t;
 
 
 void servos_init(void);
@@ -63,7 +63,7 @@ void servos_set_tilt_angle(float new_tilt_angle);
 Angles servos_point_to_angles(Point* p) ;
 uint16_t servos_pan_angle_to_timervalue(float angle);
 uint16_t servos_tilt_angle_to_timervalue(float angle);
-servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail);
+servosMessageFormat_t* servos_process_message(servosMessageFormat_t* servos_mail);
 void servos_draw_square(void);
 void servos_draw_star(void);
 

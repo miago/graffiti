@@ -59,8 +59,8 @@ typedef struct {
 void controller_init(void);
 void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y_pixel);
 void controller_process_message(controllerMessageFormat_t* controller_message);
-void controller_process_laser(laserMailFormat_t * laser_mail);
-void controller_process_joystick(joystickMailFormat_t * joystick_mail);
+void controller_process_laser(laserMessageFormat_t * laser_mail);
+void controller_process_joystick(joystickMessageFormat_t * joystick_mail);
 
 void controller_increment_x_position(void);
 void controller_decrement_x_position(void);
@@ -68,5 +68,6 @@ void controller_increment_y_position(void);
 void controller_decrement_y_position(void);
 
 uint8_t controller_get_next_pixel_coordinates(uint16_t* next_x, uint16_t* next_y, uint8_t* next_char_idx, uint16_t last_x, uint16_t last_y, uint8_t last_char_idx);
+void controller_empty_message_queue(osMessageQId message_queue_id, osPoolId message_pool_id);
 
 #endif

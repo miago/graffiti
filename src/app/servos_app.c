@@ -181,7 +181,7 @@ uint16_t servos_tilt_angle_to_timervalue(float angle){
 /**
 * @brief Function to process the incoming messages
 **/
-servosMailFormat_t* servos_process_message(servosMailFormat_t* servos_mail)
+servosMessageFormat_t* servos_process_message(servosMessageFormat_t* servos_mail)
 {
 	if( (servos_initialized == 0) && (servos_mail->message_type!=SERVOS_INIT)){
 		servos_mail->message_type = SERVOS_ERROR;
