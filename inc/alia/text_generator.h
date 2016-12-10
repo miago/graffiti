@@ -29,10 +29,6 @@
 #include <stdint.h>
 
 #define TG_FIRST_CHAR 0x20
-#define TG_FONT_X_PIXELS 5
-#define TG_FONT_Y_PIXELS 7
-#define TG_CANVAS_X_PIXELS 80
-#define TG_CANVAS_Y_PIXELS 40
 
 /*
 TODO: take this values from somewhere

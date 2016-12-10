@@ -103,7 +103,7 @@ void Controller_Thread(void const *argument)
 		if(evt.status == osEventMessage){ 
             joystick_mail = (joystickMessageFormat_t*)evt.value.p;	
             controller_process_joystick(joystick_mail); 
-            osPoolFree(joystick_mail_pool, joystick_mail);
+            osPoolFree(joystick_message_pool, joystick_mail);
 		} 
 
 		osThreadYield();	// suspend thread

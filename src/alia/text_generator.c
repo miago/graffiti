@@ -1,28 +1,29 @@
 
 #include "text_generator.h"
 #include "font5x7.h"
+#include "globals.h"
 #include <stdint.h>
 
 /**
 * @brief Number of pixels in X of the canvas
 **/
-uint16_t canvas_x_size = TG_CANVAS_X_PIXELS;
+uint16_t canvas_x_size = CANVAS_SIZE_PIXEL_X;
 
 /**
 * @brief Number of pixels in Y of the canvas
 **/
-uint16_t canvas_y_size = TG_CANVAS_Y_PIXELS;
+uint16_t canvas_y_size = CANVAS_SIZE_PIXEL_Y;
 
 /**
 * @brief Number of x pixels of the font
 */
-uint16_t font_x_size = TG_FONT_X_PIXELS;
+uint16_t font_x_size = FONT_WIDTH;
 
 /**
 * @brief Number of y pixels of the font
 */
 
-uint16_t font_y_size = TG_FONT_Y_PIXELS;
+uint16_t font_y_size = FONT_HEIGHT;
 
 
 /**

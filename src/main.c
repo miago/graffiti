@@ -149,10 +149,10 @@ int main(void)
     laser_mail->laser_state = 0;
     osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
     
-    /*laser_mail = (laserMailFormat_t *)osPoolAlloc(laser_mail_pool);
+    /*laser_mail = (laserMessageFormat_t *)osPoolAlloc(laser_mail_pool);
     laser_mail->message_type = LASER_SET_STATUS;
-    laser_mail->laser_state = 1;
-    osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);*/
+    laser_mail->laser_state = 0;
+    osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever); */
     
     
     // init display

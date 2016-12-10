@@ -85,7 +85,7 @@ float laser_position_y;
 
 uint8_t current_menu_element_id;
 
-char text_to_display[28] = "ouam pas :(\n";
+char text_to_display[28] = " Mirco Gysin\n";
 
 /**
 * @brief this variable points to a \n terminated string containg the text to display
@@ -168,7 +168,7 @@ void controller_process_joystick(joystickMessageFormat_t * joystick_mail)
     	if(controller_drawing_mode == FREE_DRAWING) {
     		if(joystick_mail->message_type == JOYSTICK_UPDATED_VALUES) {
                 if(joystick_mail->joystick_event->center == JOYSTICK_EVT_PRESSED) {
-                    laser_mail = (laserMailFormat_t*) osPoolAlloc(laser_mail_pool);
+                    laser_mail = (laserMessageFormat_t*) osPoolAlloc(laser_message_pool);
                     if(laser_mail){
                         laser_mail->message_type = LASER_TOGGLE;
                         osMessagePut(laser_mq, (uint32_t)laser_mail, osWaitForever);
@@ -176,7 +176,7 @@ void controller_process_joystick(joystickMessageFormat_t * joystick_mail)
                 }
                 if(joystick_mail->joystick_event->up == JOYSTICK_EVT_PRESSED){
                     controller_increment_y_position();
-                    servos_mail = (servosMailFormat_t*) osPoolAlloc(servos_mail_pool);
+                    servos_mail = (servosMessageFormat_t*) osPoolAlloc(servos_message_pool);
                     if(servos_mail){
                         servos_mail->message_type = SERVOS_GOTO_POSITION;
                         servos_mail->x_position = laser_position_x;
@@ -187,7 +187,7 @@ void controller_process_joystick(joystickMessageFormat_t * joystick_mail)
                 
                 if(joystick_mail->joystick_event->down == JOYSTICK_EVT_PRESSED){
                     controller_decrement_y_position();
-                    servos_mail = (servosMailFormat_t*) osPoolAlloc(servos_mail_pool);
+                    servos_mail = (servosMessageFormat_t*) osPoolAlloc(servos_message_pool);
                     if(servos_mail){
                         servos_mail->message_type = SERVOS_GOTO_POSITION;
                         servos_mail->x_position = laser_position_x;
@@ -198,7 +198,7 @@ void controller_process_joystick(joystickMessageFormat_t * joystick_mail)
                 
                 if(joystick_mail->joystick_event->right == JOYSTICK_EVT_PRESSED){
                     controller_decrement_x_position();
-                    servos_mail = (servosMailFormat_t*) osPoolAlloc(servos_mail_pool);
+                    servos_mail = (servosMessageFormat_t*) osPoolAlloc(servos_message_pool);
                     if(servos_mail){
                         servos_mail->message_type = SERVOS_GOTO_POSITION;
                         servos_mail->x_position = laser_position_x;
@@ -209,7 +209,7 @@ void controller_process_joystick(joystickMessageFormat_t * joystick_mail)
                 
                 if(joystick_mail->joystick_event->left == JOYSTICK_EVT_PRESSED){
                     controller_increment_x_position();
-                    servos_mail = (servosMailFormat_t*) osPoolAlloc(servos_mail_pool);
+                    servos_mail = (servosMessageFormat_t*) osPoolAlloc(servos_message_pool);
                     if(servos_mail){
                         servos_mail->message_type = SERVOS_GOTO_POSITION;
                         servos_mail->x_position = laser_position_x;
@@ -282,31 +282,24 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
     laserMessageFormat_t* laserMessage;
     laserMessageFormat_t* secondaryLaserMessage;
     controllerMessageFormat_t* next_message;
-    displayMessageFormat_t* display_message;
-    displayMessageFormat_t* display_message_X;
-    displayMessageFormat_t* display_message_Y;
+
     float x_coordinate;
     float y_coordinate;
     uint16_t absolute_pixel_x;
     uint16_t absolute_pixel_y;
     uint8_t pixel_state;
     osEvent evt;
-    uint16_t x_shift = 5;
-    uint16_t y_shift = 5;
+    uint16_t x_shift = TEXT_OFFSET_X;
+    uint16_t y_shift = TEXT_OFFSET_Y;
     
     uint16_t next_x, next_y;
     uint16_t next_character_idx;
     uint16_t is_there_more = 1;
     
-        
-    if(y_pixel == 0){
-        /*  instead of going directly to the first point of each line, we move
-            there gently, hoping that the location will be more precise.
-            We simply go one pixel below the starting point
-        */
+    if( (y_pixel == 0) && (x_pixel == 0) && (character_index == 0)) {
 
-        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift ;
-        absolute_pixel_y = y_pixel + y_shift - 1;
+        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 3;
+        absolute_pixel_y = y_pixel + y_shift - 3;
 
         /* get the coordinate of the pixel in the x,y plane, needed to
             then move the servos to that position 
@@ -314,7 +307,7 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
         text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
 
         /* send command to servo */
-        servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_mail_pool);
+        servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
         servosMessage->message_type = SERVOS_GOTO_POSITION;
         servosMessage->x_position = x_coordinate;
         servosMessage->y_position = y_coordinate; 
@@ -323,15 +316,142 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
         /* wait until command has been executed */
         evt = osMessageGet(servos_mq_in, osWaitForever);
 
-        secondaryServosMessage = (servosMessageFormat_t) evt.value.p;
-        if(secondaryServosMessage.message_type != SERVOS_OK)
+        secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+        if(secondaryServosMessage->message_type != SERVOS_OK)
         {
             /* something is wrong here! */
-            while(1);
+            //while(1);
         }
         /* free up the memory */
-        osPoolFree(servos_mail_pool, servosMessage);
-        osPoolFree(servos_mail_pool, secondaryServosMessage);
+        osPoolFree(servos_message_pool, servosMessage);
+        osPoolFree(servos_message_pool, secondaryServosMessage);
+        
+        osDelay(VERY_FIRST_PIXEL_PAUSE);
+        
+         absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 2;
+        absolute_pixel_y = y_pixel + y_shift - 2;
+
+        /* get the coordinate of the pixel in the x,y plane, needed to
+            then move the servos to that position 
+        */
+        text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
+
+        /* send command to servo */
+        servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
+        servosMessage->message_type = SERVOS_GOTO_POSITION;
+        servosMessage->x_position = x_coordinate;
+        servosMessage->y_position = y_coordinate; 
+        osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+
+        /* wait until command has been executed */
+        evt = osMessageGet(servos_mq_in, osWaitForever);
+
+        secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+        if(secondaryServosMessage->message_type != SERVOS_OK)
+        {
+            /* something is wrong here! */
+            //while(1);
+        }
+        /* free up the memory */
+        osPoolFree(servos_message_pool, servosMessage);
+        osPoolFree(servos_message_pool, secondaryServosMessage);
+        
+        osDelay(FIRST_PIXEL_PAUSE);
+        
+        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 1;
+        absolute_pixel_y = y_pixel + y_shift - 1;
+
+        /* get the coordinate of the pixel in the x,y plane, needed to
+            then move the servos to that position 
+        */
+        text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
+
+        /* send command to servo */
+        servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
+        servosMessage->message_type = SERVOS_GOTO_POSITION;
+        servosMessage->x_position = x_coordinate;
+        servosMessage->y_position = y_coordinate; 
+        osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+
+        /* wait until command has been executed */
+        evt = osMessageGet(servos_mq_in, osWaitForever);
+
+        secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+        if(secondaryServosMessage->message_type != SERVOS_OK)
+        {
+            /* something is wrong here! */
+            //while(1);
+        }
+        /* free up the memory */
+        osPoolFree(servos_message_pool, servosMessage);
+        osPoolFree(servos_message_pool, secondaryServosMessage);
+        
+        osDelay(FIRST_PIXEL_PAUSE);
+    } else if(y_pixel == 0){
+        /*  instead of going directly to the first point of each line, we move
+            there gently, hoping that the location will be more precise.
+            We simply go two pixels below the starting point
+        */
+        
+        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 2;
+        absolute_pixel_y = y_pixel + y_shift - 2;
+
+        /* get the coordinate of the pixel in the x,y plane, needed to
+            then move the servos to that position 
+        */
+        text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
+
+        /* send command to servo */
+        servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
+        servosMessage->message_type = SERVOS_GOTO_POSITION;
+        servosMessage->x_position = x_coordinate;
+        servosMessage->y_position = y_coordinate; 
+        osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+
+        /* wait until command has been executed */
+        evt = osMessageGet(servos_mq_in, osWaitForever);
+
+        secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+        if(secondaryServosMessage->message_type != SERVOS_OK)
+        {
+            /* something is wrong here! */
+            //while(1);
+        }
+        /* free up the memory */
+        osPoolFree(servos_message_pool, servosMessage);
+        osPoolFree(servos_message_pool, secondaryServosMessage);
+        
+        osDelay(FIRST_PIXEL_PAUSE);
+
+        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 1;
+        absolute_pixel_y = y_pixel + y_shift - 1;
+
+        /* get the coordinate of the pixel in the x,y plane, needed to
+            then move the servos to that position 
+        */
+        text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
+
+        /* send command to servo */
+        servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
+        servosMessage->message_type = SERVOS_GOTO_POSITION;
+        servosMessage->x_position = x_coordinate;
+        servosMessage->y_position = y_coordinate; 
+        osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+
+        /* wait until command has been executed */
+        evt = osMessageGet(servos_mq_in, osWaitForever);
+
+        secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+        if(secondaryServosMessage->message_type != SERVOS_OK)
+        {
+            /* something is wrong here! */
+            //while(1);
+        }
+        /* free up the memory */
+        osPoolFree(servos_message_pool, servosMessage);
+        osPoolFree(servos_message_pool, secondaryServosMessage);
+        
+        osDelay(FIRST_PIXEL_PAUSE);
     }
     
     /* move servos to the desired position */
@@ -342,7 +462,7 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
     text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, absolute_pixel_x, absolute_pixel_y);
 
     /* send command to servo */
-    servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_mail_pool);
+    servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
     servosMessage->message_type = SERVOS_GOTO_POSITION;
     servosMessage->x_position = x_coordinate;
     servosMessage->y_position = y_coordinate;
@@ -351,56 +471,57 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
     /* wait until command has been executed */
     evt = osMessageGet(servos_mq_in, osWaitForever);
 
-    secondaryServosMessage = (servosMessageFormat_t) evt.value.p;
-    if(secondaryServosMessage.message_type != SERVOS_OK)
+    secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+    if(secondaryServosMessage->message_type != SERVOS_OK)
     {
         /* something is wrong here! */
-        while(1);
+        //while(1);
     }
     /* free up the memory */
-    osPoolFree(servos_mail_pool, servosMessage);
-    osPoolFree(servos_mail_pool, secondaryServosMessage);
+    osPoolFree(servos_message_pool, servosMessage);
+    osPoolFree(servos_message_pool, secondaryServosMessage);
 
     pixel_state = text_generator_get_pixel(x_pixel, y_pixel, output_text[character_index]);
     /* Do something only if we have to illuminate that point */
     if(1 == pixel_state){
+    /*if(1){*/
         /* let the servos stabilize */
         osDelay(SERVOS_STABILIZATION_TIME);
 
-        laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_mail_pool);
+        laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
         laserMessage->message_type = LASER_SET_STATUS;
         laserMessage->laser_state = 1;
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
    
-        evt = osMessageGet(servos_mq_in, osWaitForever);
+        evt = osMessageGet(laser_mq_in, osWaitForever);
 
-        secondaryLaserMessage = (laserMessageFormat_t) evt.value.p;
-        if(secondaryLaserMessage.message_type != LASER_OK)
+        secondaryLaserMessage = (laserMessageFormat_t*) evt.value.p;
+        if(secondaryLaserMessage->message_type != LASER_OK)
         {
             /* something is wrong here! */
-            while(1);
+            //while(1);
         }
         /* free up the memory */
-        osPoolFree(laser_mail_pool, laserMessage);
-        osPoolFree(laser_mail_pool, secondaryLaserMessage);
+        osPoolFree(laser_message_pool, laserMessage);
+        osPoolFree(laser_message_pool, secondaryLaserMessage);
 
         osDelay(LASER_ON_TIME);
 
-        laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_mail_pool);
+        laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
         laserMessage->message_type = LASER_SET_STATUS;
         laserMessage->laser_state = 0;
         osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
         evt = osMessageGet(laser_mq_in, osWaitForever);
 
-        secondaryLaserMessage = (laserMessageFormat_t) evt.value.p;
-        if(secondaryLaserMessage.message_type != LASER_OK)
+        secondaryLaserMessage = (laserMessageFormat_t*) evt.value.p;
+        if(secondaryLaserMessage->message_type != LASER_OK)
         {
             /* something is wrong here! */
             while(1);
         }
         /* free up the memory */
-        osPoolFree(laser_mail_pool, laserMessage);
-        osPoolFree(laser_mail_pool, secondaryLaserMessage);
+        osPoolFree(laser_message_pool, laserMessage);
+        osPoolFree(laser_message_pool, secondaryLaserMessage);
     }
     
     is_there_more = text_generator_get_next_pixel_coordinates(&next_x, &next_y, &next_character_idx, x_pixel, y_pixel, character_index, output_text);
@@ -425,10 +546,10 @@ void controller_empty_message_queue(osMessageQId message_queue_id, osPoolId mess
         evt = osMessageGet(message_queue_id, 0);
         if(evt.status == osEventMessage) {
             if(message_pool_id){
-                osPoolFree(controller_message_pool, evt.value.p;);
+                osPoolFree(controller_message_pool, evt.value.p);
             }
         }
-    } while(evt.statue == osEventMessage);
+    } while(evt.status == osEventMessage);
 }
 
 
