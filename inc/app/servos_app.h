@@ -66,5 +66,8 @@ uint16_t servos_tilt_angle_to_timervalue(float angle);
 servosMessageFormat_t* servos_process_message(servosMessageFormat_t* servos_mail);
 void servos_draw_square(void);
 void servos_draw_star(void);
+Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number);
+uint16_t servos_get_number_of_points_in_spiral(uint16_t number_of_windings);
+float servos_get_interspiral_space(float pixel_size, uint16_t number_of_windings);
 
 #endif

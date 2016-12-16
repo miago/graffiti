@@ -27,6 +27,8 @@
 #include "servos_hal.h"
 #include "servos_app.h"
 #include "math.h"
+#include <stdio.h>
+
 /*
 #include "cmsis_os.h"
 #include "laser_app.h"
@@ -262,4 +264,55 @@ void servos_draw_star(void){
         osDelay(delay);
     }
 */
+}
+
+Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number){
+    Point pt;
+
+    uint16_t pt_cnt = 0;
+    uint16_t nr_of_steps;
+
+    float spacing = servos_get_interspiral_space(pixel_size, windings);
+    pt.x = x;
+    pt.y = y;
+
+
+    if(point_number == 0){
+        return pt;
+    } 
+
+    if((servos_get_number_of_points_in_spiral(windings)-1) == point_number) {
+        pt.x = x - pixel_size/2;
+        pt.y = y + pixel_size/2;
+        return pt;
+    }
+
+    for(pt_cnt = 1; pt_cnt <= point_number; pt_cnt++){
+
+        nr_of_steps = ceil(pt_cnt/2.0);
+
+        /*printf("Nr of steps: %d \r\n", nr_of_steps); */
+        if(((pt_cnt) % 4) == 1) {
+            /* increment y value*/
+            pt.y = pt.y + nr_of_steps * spacing;
+        } else if(((pt_cnt) % 4) == 2) {
+            pt.x = pt.x + nr_of_steps * spacing;
+        } else if(((pt_cnt) % 4) == 3) {
+            pt.y = pt.y - nr_of_steps * spacing;
+        } else {
+            pt.x = pt.x - nr_of_steps * spacing;
+        }
+    }
+
+    return pt;
+}
+
+uint16_t servos_get_number_of_points_in_spiral(uint16_t number_of_windings) {
+    return (2 + 4*number_of_windings);
+}
+
+float servos_get_interspiral_space(float pixel_size, uint16_t number_of_windings){
+    float radius = pixel_size/2;
+    float interspiral_space = radius / number_of_windings;
+    return interspiral_space;
 }

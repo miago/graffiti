@@ -139,3 +139,117 @@ void test_servos_tilt_angle_to_timervalue(void) {
 
 	TEST_ASSERT_EQUAL(815, tv);
 }
+
+void test_servos_get_point_of_spiral_last(void){
+	Point p;
+	p = servos_get_point_of_spiral(0, 0, 2, 1, 5);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -1, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 1, p.y);
+}
+
+void test_servos_get_point_of_spiral_first(void){
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(    0,       0,       5, 			   1,                 0            );
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 0, p.y);
+
+	p = servos_get_point_of_spiral(    -1.23,       -4.2,       5, 			   1,                 0            );
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -1.23, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -4.2, p.y);
+}
+
+
+void test_servos_get_point_of_spiral_second(void) { 
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 1);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 1, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 4, p.y);
+}
+
+void test_servos_get_point_of_spiral_third(void) {
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 2);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 4, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 4, p.y);
+}
+
+void test_servos_get_point_of_spiral_fourth(void) {
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 3);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 4, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -2, p.y);
+}
+
+void test_servos_get_point_of_spiral_fifth(void) {
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 4);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -2, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -2, p.y);
+}
+
+void test_servos_get_point_of_spiral_sixth(void) {
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 5);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -2, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 7, p.y);
+}
+
+void test_servos_get_point_of_spiral_seventh(void) {
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 6);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 7, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 7, p.y);
+}
+
+void test_servos_get_point_of_spiral_eighth(void){
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 7);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 7, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -5, p.y);
+}
+
+void test_servos_get_point_of_spiral_ninth(void){
+	Point p;
+	/* Point servos_get_point_of_spiral(float x, float y, float pixel_size, uint16_t windings, uint16_t point_number); */
+	p = servos_get_point_of_spiral(1, 1, 12, 2, 8);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -5, p.x);
+	TEST_ASSERT_FLOAT_WITHIN(0.001, -5, p.y);
+}
+
+void test_servos_get_number_of_points_in_spiral(void){
+	uint16_t nr_of_points;
+
+
+	nr_of_points = servos_get_number_of_points_in_spiral(1);
+
+	TEST_ASSERT_EQUAL(6, nr_of_points);
+
+}
+
+void test_get_interspiral_space(void) {
+	float iss;
+
+	iss = servos_get_interspiral_space(10.0, 1);
+
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 5, iss);
+
+	iss = servos_get_interspiral_space(4, 2);
+
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 1, iss);
+
+	iss = servos_get_interspiral_space(6, 3);
+
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 1, iss);
+
+	iss = servos_get_interspiral_space(10, 3);
+
+	TEST_ASSERT_FLOAT_WITHIN(0.001, 1.666666, iss);
+}
