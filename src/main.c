@@ -123,7 +123,7 @@ int main(void)
 	threadData[0].portId = GPIOA;
 	threadData[0].beepFreq = 1;
 	threadData[0].beepTime = 1;
-	Init_ThreadA(&threadData[0]);
+	//Init_ThreadA(&threadData[0]);
     
     // init controller
     

@@ -34,6 +34,7 @@
 #include "text_generator.h"
 #include <cmsis_os.h>
 #include "Serial.h"
+#include <math.h>
 
 /**
 * @brief contains the width of a character (pixel)
@@ -85,7 +86,10 @@ float laser_position_y;
 
 uint8_t current_menu_element_id;
 
-char text_to_display[28] = "uCs are fun!\n";
+uint8_t rows_to_display = 2;
+
+char row0[28] = "Thank you\n";
+char row1[28] = "your attention!\n";
 
 /**
 * @brief this variable points to a \n terminated string containg the text to display
@@ -105,7 +109,7 @@ void controller_init(void)
     laser_position_x = 0;
     laser_position_y = 0;
 
-    output_text = text_to_display;
+    output_text = row1;
 
     controller_font_height = FONT_HEIGHT;
     controller_font_width = FONT_WIDTH;
@@ -137,10 +141,16 @@ void controller_process_message(controllerMessageFormat_t* controller_message){
             next_message->x_pixel = 0;
             next_message->y_pixel = 0;
             next_message->character_idx = 0;
+            next_message->row_number = 0;
             osMessagePut(controller_mq, (uint32_t)next_message, osWaitForever);
             break;
         case CONTROLLER_DRAW_TEXT_NEXT:
-            controller_draw_text(controller_message->character_idx, controller_message->x_pixel, controller_message->y_pixel);
+            if(controller_message->row_number == 0){
+                output_text = row0; 
+            } else if(controller_message->row_number == 1) {
+                output_text = row1;
+            }
+            controller_draw_text(controller_message->character_idx, controller_message->x_pixel, controller_message->y_pixel, output_text, controller_message->row_number);
             osPoolFree(controller_message_pool, controller_message);
         
         default:
@@ -276,7 +286,7 @@ void controller_decrement_y_position(void){
 * is incremented by 1 and the y coordinate is reset to 0.
 */
 
-void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y_pixel) {
+void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y_pixel, char* text, uint8_t row_number) {
     servosMessageFormat_t* servosMessage;
     servosMessageFormat_t* secondaryServosMessage;
     laserMessageFormat_t* laserMessage;
@@ -289,9 +299,13 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
     uint16_t absolute_pixel_y;
     uint8_t pixel_state;
     osEvent evt;
-    uint16_t x_shift = TEXT_OFFSET_X;
     
-    uint16_t y_shift = TEXT_OFFSET_Y;
+    // center the text
+    //uint16_t x_shift = (CANVAS_SIZE_PIXEL_X - strlen(text)) / 2;
+    uint16_t x_shift = floor((CANVAS_SIZE_PIXEL_X - strlen(text)*FONT_WIDTH) /2.0);
+    //uint16_t x_shift = TEXT_OFFSET_X;
+    
+    uint16_t y_shift = TEXT_OFFSET_Y - row_number*(FONT_HEIGHT+1);
     
     uint16_t next_x, next_y;
     uint16_t next_character_idx;
@@ -540,10 +554,12 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
 
                 osDelay(LASER_SPIRAL_INTERPOINT_DELAY);
             }
+        } else {
+            osDelay(LASER_ON_TIME);
         }
         /* */
 
-        //osDelay(LASER_ON_TIME);
+      
 
         laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
         laserMessage->message_type = LASER_SET_STATUS;
@@ -570,7 +586,18 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
         next_message->x_pixel = next_x;
         next_message->y_pixel = next_y;
         next_message->character_idx = next_character_idx;
+        next_message->row_number = row_number;
         osMessagePut(controller_mq, (uint32_t)next_message, osWaitForever);
+    } else {
+        if(row_number < (rows_to_display-1)){
+            next_message = (controllerMessageFormat_t *)osPoolAlloc(controller_message_pool);
+            next_message->message_type = CONTROLLER_DRAW_TEXT_NEXT;
+            next_message->x_pixel = 0;
+            next_message->y_pixel = 0;
+            next_message->character_idx = 0;
+            next_message->row_number = row_number+1;
+            osMessagePut(controller_mq, (uint32_t)next_message, osWaitForever);
+        }
     }
 }
 
