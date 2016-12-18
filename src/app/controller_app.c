@@ -85,7 +85,7 @@ float laser_position_y;
 
 uint8_t current_menu_element_id;
 
-char text_to_display[28] = " Mirco Gysin\n";
+char text_to_display[28] = "uCs are fun!\n";
 
 /**
 * @brief this variable points to a \n terminated string containg the text to display
@@ -290,11 +290,17 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
     uint8_t pixel_state;
     osEvent evt;
     uint16_t x_shift = TEXT_OFFSET_X;
+    
     uint16_t y_shift = TEXT_OFFSET_Y;
     
     uint16_t next_x, next_y;
     uint16_t next_character_idx;
     uint16_t is_there_more = 1;
+
+    uint16_t nr_of_spiral_points;
+    uint16_t spiral_point_counter;
+
+    Point pt;
     
     if( (y_pixel == 0) && (x_pixel == 0) && (character_index == 0)) {
 
@@ -328,7 +334,7 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
         
         osDelay(VERY_FIRST_PIXEL_PAUSE);
         
-         absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 2;
+        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 2;
         absolute_pixel_y = y_pixel + y_shift - 2;
 
         /* get the coordinate of the pixel in the x,y plane, needed to
@@ -505,7 +511,39 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
         osPoolFree(laser_message_pool, laserMessage);
         osPoolFree(laser_message_pool, secondaryLaserMessage);
 
-        osDelay(LASER_ON_TIME);
+        if(USE_SPIRALS){
+
+
+            nr_of_spiral_points = servos_get_number_of_points_in_spiral(NR_OF_SPIRAL_WINDINGS);
+            /* APPLY SPIRAL */
+            for(spiral_point_counter = 0; spiral_point_counter < nr_of_spiral_points; ++spiral_point_counter){
+                pt = servos_get_point_of_spiral(x_coordinate, y_coordinate, text_generator_calculate_pixel_size_x(), NR_OF_SPIRAL_WINDINGS, spiral_point_counter);
+                /* send command to servo */
+                servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
+                servosMessage->message_type = SERVOS_GOTO_POSITION;
+                servosMessage->x_position = pt.x;
+                servosMessage->y_position = pt.y;
+
+                osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+                /* wait until command has been executed */
+                evt = osMessageGet(servos_mq_in, osWaitForever);
+
+                secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+                if(secondaryServosMessage->message_type != SERVOS_OK)
+                {
+                    /* something is wrong here! */
+                    //while(1);
+                }
+                /* free up the memory */
+                osPoolFree(servos_message_pool, servosMessage);
+                osPoolFree(servos_message_pool, secondaryServosMessage);
+
+                osDelay(LASER_SPIRAL_INTERPOINT_DELAY);
+            }
+        }
+        /* */
+
+        //osDelay(LASER_ON_TIME);
 
         laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
         laserMessage->message_type = LASER_SET_STATUS;
@@ -551,5 +589,3 @@ void controller_empty_message_queue(osMessageQId message_queue_id, osPoolId mess
         }
     } while(evt.status == osEventMessage);
 }
-
-

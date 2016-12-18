@@ -178,12 +178,12 @@ int main(void)
     servos_mail->message_type = SERVOS_INIT;
     osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
     
-    /*servos_mail = (servosMailFormat_t *)osPoolAlloc(servos_mail_pool);
+    servos_mail = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
     servos_mail->message_type = SERVOS_GOTO_POSITION;
-    servos_mail->x_position = +1.0;
-    servos_mail->y_position = +0.5;
-    osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);*/
-   
+    servos_mail->x_position = +0.0;
+    servos_mail->y_position = +0.0;
+    osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
+      
 
     // send command to controller to begin writing the test
     
