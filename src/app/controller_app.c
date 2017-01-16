@@ -86,10 +86,10 @@ float laser_position_y;
 
 uint8_t current_menu_element_id;
 
-uint8_t rows_to_display = 2;
+uint8_t rows_to_display = 1;
 
-char row0[28] = "Thank you\n";
-char row1[28] = "your attention!\n";
+char row0[28] = "BME\n";
+char row1[28] = "Cedric!\n";
 
 /**
 * @brief this variable points to a \n terminated string containg the text to display
@@ -153,6 +153,12 @@ void controller_process_message(controllerMessageFormat_t* controller_message){
             controller_draw_text(controller_message->character_idx, controller_message->x_pixel, controller_message->y_pixel, output_text, controller_message->row_number);
             osPoolFree(controller_message_pool, controller_message);
         
+            break;
+        case CONTROLLER_SHOW_PIXELS:
+            
+            controller_show_pixels();     
+            osPoolFree(controller_message_pool, controller_message);
+            
         default:
             break;
     }
@@ -316,9 +322,9 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
 
     Point pt;
     
-    if( (y_pixel == 0) && (x_pixel == 0) && (character_index == 0)) {
+    if((y_pixel == 0) && (x_pixel == 0) && (character_index == 0)) {
 
-        absolute_pixel_x = character_index*FONT_WIDTH + x_pixel + x_shift - 3;
+        absolute_pixel_x = character_index*(FONT_WIDTH+1) + x_pixel + x_shift - 3;
         absolute_pixel_y = y_pixel + y_shift - 3;
 
         /* get the coordinate of the pixel in the x,y plane, needed to
@@ -597,6 +603,75 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
             next_message->character_idx = 0;
             next_message->row_number = row_number+1;
             osMessagePut(controller_mq, (uint32_t)next_message, osWaitForever);
+        }
+    }
+}
+
+void controller_show_pixels(void){
+    
+    servosMessageFormat_t* servosMessage;
+    servosMessageFormat_t* secondaryServosMessage;
+    laserMessageFormat_t* laserMessage;
+    laserMessageFormat_t* secondaryLaserMessage;
+
+    float x_coordinate;
+    float y_coordinate;
+    uint16_t x = 0;
+    uint16_t y = 0;
+    osEvent evt;
+    
+    for(x = 0; x < CANVAS_SIZE_PIXEL_X; x++){
+        for(y = 0; y < CANVAS_SIZE_PIXEL_Y; y++){
+            text_generator_get_pixel_coordinate(&x_coordinate, &y_coordinate, x, y);
+
+            /* send command to servo */
+            servosMessage = (servosMessageFormat_t *)osPoolAlloc(servos_message_pool);
+            servosMessage->message_type = SERVOS_GOTO_POSITION;
+            servosMessage->x_position = x_coordinate;
+            servosMessage->y_position = y_coordinate; 
+            osMessagePut(servos_mq, (uint32_t)servosMessage, osWaitForever);
+            
+            secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+            if(secondaryServosMessage->message_type != SERVOS_OK)
+            {
+                /* something is wrong here! */
+                //while(1);
+            }
+                
+            laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
+            laserMessage->message_type = LASER_SET_STATUS;
+            laserMessage->laser_state = 1;
+            osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
+       
+            evt = osMessageGet(laser_mq_in, osWaitForever);
+
+            secondaryLaserMessage = (laserMessageFormat_t*) evt.value.p;
+            if(secondaryLaserMessage->message_type != LASER_OK)
+            {
+                /* something is wrong here! */
+                //while(1);
+            }
+            
+            osDelay(LASER_ON_TIME);
+            osPoolFree(servos_message_pool, servosMessage);
+            osPoolFree(servos_message_pool, secondaryServosMessage);
+            
+            
+            laserMessage = (laserMessageFormat_t *)osPoolAlloc(laser_message_pool);
+            laserMessage->message_type = LASER_SET_STATUS;
+            laserMessage->laser_state = 0;
+            osMessagePut(laser_mq, (uint32_t)laserMessage, osWaitForever);
+            
+            secondaryLaserMessage = (laserMessageFormat_t*) evt.value.p;
+            if(secondaryLaserMessage->message_type != LASER_OK)
+            {
+                /* something is wrong here! */
+                //while(1);
+            }
+        
+            osPoolFree(servos_message_pool, servosMessage);
+            osPoolFree(servos_message_pool, secondaryServosMessage);
+
         }
     }
 }

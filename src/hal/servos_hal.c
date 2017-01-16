@@ -34,7 +34,7 @@ void servos_init_hal(void){
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
     
-    timer_structure.TIM_ClockDivision = TIM_CKD_DIV4;
+    timer_structure.TIM_ClockDivision = TIM_CKD_DIV1;
     timer_structure.TIM_CounterMode = TIM_CounterMode_Up;
     timer_structure.TIM_Period = 10000-1; 
     timer_structure.TIM_Prescaler = 143; 
