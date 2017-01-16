@@ -37,7 +37,7 @@ void servos_init_hal(void){
     timer_structure.TIM_ClockDivision = TIM_CKD_DIV1;
     timer_structure.TIM_CounterMode = TIM_CounterMode_Up;
     timer_structure.TIM_Period = 10000-1; 
-    timer_structure.TIM_Prescaler = 143; 
+    timer_structure.TIM_Prescaler = 144; 
     TIM_TimeBaseInit(TIM3, &timer_structure);
     
     /* Timer Output Compare Mode PWM, Channel 3: PAN */
