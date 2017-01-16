@@ -1,20 +1,27 @@
-/**
-* CMSIS-RTOS Starter application: Creates three identical threads for a LED
-* @file     main.c
-* @date     21.11.2016
-* @version  1.0
-* @author   bfh-ti/dnd1
-* 
-* @warning
-* THE PRESENT SOFTWARE CODE IS FOR EDUCATIONAL PURPOSES ONLY, VOID OF ANY
-* WARRANTY WHATSOEVER
-*
-* <h2><center>smile from time to time</center></h2>
-*
-*
-* uVision MDK-ARM 5.21a or later
-*/
+/* 
+ * This file is part of the Graffiti distribution 
+ * (https://github.com/miago/graffiti).
+ * Copyright (c) 2016 Mirco Gysin.
+ * 
+ * This program is free software: you can redistribute it and/or modify  
+ * it under the terms of the GNU General Public License as published by  
+ * the Free Software Foundation, version 3.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
+/**
+ * @file main.c
+ * @author Mirco E. Gysin
+ * @date 16 Jan 2017
+ * @brief Main file of the project
+ */
 /*----------------------------------------------------------------------------
  * CMSIS-RTOS 'main' function template
  *---------------------------------------------------------------------------*/
@@ -33,14 +40,6 @@
 #include <stdio.h>
 #include "alia.h"
 
-extern void Init_Timers(void);
-
-extern int Init_ThreadA(threadData_t *);
-
-/**
-* @brief data of the LED thread
-**/
-threadData_t threadData[3];
 
 /**
 * @brief data of the Controller
@@ -173,15 +172,14 @@ int main(void)
     osMessagePut(servos_mq, (uint32_t)servos_mail, osWaitForever);
       
 
-    // send command to controller to begin writing the test
+    // send command to controller to begin writing the text
     
-    osDelay(500); /* should be sufficient! */
+    osDelay(500); /* should be sufficient! 
+    The components have been initialized */
     
     controller_message = (controllerMessageFormat_t *)osPoolAlloc(controller_message_pool);
     controller_message->message_type = CONTROLLER_DRAW_TEXT;
     osMessagePut(controller_mq, (uint32_t)controller_message, osWaitForever);
-
-	Init_Timers();
 
 	osKernelStart();	// start thread execution 
 }

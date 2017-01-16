@@ -343,9 +343,11 @@ void controller_draw_text(uint16_t character_index, uint16_t x_pixel, uint16_t y
         evt = osMessageGet(servos_mq_in, osWaitForever);
 
         secondaryServosMessage = (servosMessageFormat_t*) evt.value.p;
+        /* something is wrong here! Messages are of the wrong type, 
+        don't know why! TODO: fix it!*/
         if(secondaryServosMessage->message_type != SERVOS_OK)
         {
-            /* something is wrong here! */
+           
             //while(1);
         }
         /* free up the memory */

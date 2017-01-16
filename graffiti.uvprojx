@@ -390,21 +390,6 @@
               <FilePath>.\src\alia\display.c</FilePath>
             </File>
             <File>
-              <FileName>Semaphore.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\alia\Semaphore.c</FilePath>
-            </File>
-            <File>
-              <FileName>Thread.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\alia\Thread.c</FilePath>
-            </File>
-            <File>
-              <FileName>Timer.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\alia\Timer.c</FilePath>
-            </File>
-            <File>
               <FileName>alia.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\alia\alia.c</FilePath>
@@ -414,21 +399,11 @@
               <FileType>1</FileType>
               <FilePath>.\src\alia\text_generator.c</FilePath>
             </File>
-            <File>
-              <FileName>Serial.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\alia\Serial.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>app</GroupName>
           <Files>
-            <File>
-              <FileName>clock_app.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\app\clock_app.c</FilePath>
-            </File>
             <File>
               <FileName>joystick_app.c</FileName>
               <FileType>1</FileType>
@@ -438,11 +413,6 @@
               <FileName>laser_app.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\app\laser_app.c</FilePath>
-            </File>
-            <File>
-              <FileName>potentiometers_app.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\app\potentiometers_app.c</FilePath>
             </File>
             <File>
               <FileName>servos_app.c</FileName>
@@ -465,11 +435,6 @@
           <GroupName>hal</GroupName>
           <Files>
             <File>
-              <FileName>clock_hal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\hal\clock_hal.c</FilePath>
-            </File>
-            <File>
               <FileName>joystick_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hal\joystick_hal.c</FilePath>
@@ -478,11 +443,6 @@
               <FileName>laser_hal.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\src\hal\laser_hal.c</FilePath>
-            </File>
-            <File>
-              <FileName>potentiometers_hal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\hal\potentiometers_hal.c</FilePath>
             </File>
             <File>
               <FileName>servos_hal.c</FileName>

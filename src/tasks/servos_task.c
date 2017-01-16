@@ -65,15 +65,15 @@ int Servos_Thread_Init(servosDataBlock_t * servosDataBlock)
 void Servos_Thread(void const *argument)
 {
     osEvent evt;	
-    servosMessageFormat_t* servos_mail;
+    servosMessageFormat_t* servos_message;
 	//threadData_t *value = (threadData_t *) argument;
 
 	while (1) {
         evt = osMessageGet(servos_mq, osWaitForever);
 		if(evt.status == osEventMessage){
-            servos_mail = (servosMessageFormat_t*)evt.value.p;	
-            servos_mail = servos_process_message(servos_mail);
-            osMessagePut(servos_mq_in, (uint32_t)servos_mail, osWaitForever);
+            servos_message = (servosMessageFormat_t*)evt.value.p;	
+            servos_message = servos_process_message(servos_message);
+            osMessagePut(servos_mq_in, (uint32_t)servos_message, osWaitForever);
             /*osPoolFree(servos_mail_pool, servos_mail); */
 		}
 		osThreadYield();	// suspend thread
