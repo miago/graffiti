@@ -113,18 +113,6 @@ int main(void)
 
 	osKernelInitialize();	// initialize CMSIS-RTOS, stop scheduler
 
-	// initialize peripherals here
-
-	// create 'thread' functions that start executing,
-	// example: tid_name = osThreadCreate (osThread(name), NULL);
-
-	threadData[0].delay = 1000;
-	threadData[0].pinId = GPIO_Pin_9;
-	threadData[0].portId = GPIOA;
-	threadData[0].beepFreq = 1;
-	threadData[0].beepTime = 1;
-	//Init_ThreadA(&threadData[0]);
-    
     // init controller
     
     Controller_Thread_Init(&controllerData);

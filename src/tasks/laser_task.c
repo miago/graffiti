@@ -65,14 +65,14 @@ int Laser_Thread_Init(laserDataBlock_t * laserDataBlock)
 void Laser_Thread(void const *argument)
 {
     osEvent evt;	
-    laserMessageFormat_t* laser_mail;
+    laserMessageFormat_t* laser_message;
     laserMessageFormat_t* ret_value;
 
 	while (1) {
         evt = osMessageGet(laser_mq, osWaitForever);
 		if(evt.status == osEventMessage){
-            laser_mail = (laserMessageFormat_t*)evt.value.p;	
-            ret_value = laser_process_message(laser_mail);
+            laser_message = (laserMessageFormat_t*)evt.value.p;	
+            ret_value = laser_process_message(laser_message);
             osMessagePut(laser_mq_in, (uint32_t)ret_value, osWaitForever);
 		}
 		osThreadYield();

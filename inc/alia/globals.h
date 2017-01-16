@@ -7,7 +7,9 @@
 #define CANVAS_SIZE_PIXEL_Y 17
 #define CANVAS_SIZE_PIXEL_X (CANVAS_SIZE_PIXEL_Y*2)
 
+/*
 #define TEXT_OFFSET_X 12
+*/
 #define TEXT_OFFSET_Y 4
 
 /* in ms */
